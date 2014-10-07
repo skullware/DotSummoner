@@ -1,15 +1,14 @@
 package info.skullware.dotsummoner;
 
-import info.skullware.dotsummoner.common.KeyListenScene;
-import info.skullware.dotsummoner.common.MultiSceneActivity;
-import info.skullware.dotsummoner.scenes.title.TitleScene;
+import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
+import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.scene.title.TitleScene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.util.FPSLogger;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
