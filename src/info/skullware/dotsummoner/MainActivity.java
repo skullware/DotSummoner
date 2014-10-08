@@ -17,13 +17,13 @@ import android.hardware.SensorEventListener;
 public class MainActivity extends MultiSceneActivity implements SensorEventListener {
 
 	// 画面サイズ
-	private int CAMERA_WIDTH = 800;
-	private int CAMERA_HEIGHT = 480;
+	public static int WIDTH = 800;
+	public static int HEIGHT = 480;
 
 	@Override
 	public EngineOptions onCreateEngineOptions() {
 		// サイズを指定し描画範囲をインスタンス化
-		final Camera camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);		
+		final Camera camera = new Camera(0, 0, WIDTH, HEIGHT);		
 		// ゲームのエンジンを初期化。
 		// 第1引数 タイトルバーを表示しないモード
 		// 第2引数 画面は縦向き（幅480、高さ800）
@@ -35,7 +35,7 @@ public class MainActivity extends MultiSceneActivity implements SensorEventListe
 				// 画面縦向き
 				ScreenOrientation.LANDSCAPE_FIXED,
 				// 画面（480 * 800）解像度の縦横比を保ったまま最大まで拡大
-				new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT),
+				new RatioResolutionPolicy(WIDTH, HEIGHT),
 				// 描画範囲
 				camera);
 

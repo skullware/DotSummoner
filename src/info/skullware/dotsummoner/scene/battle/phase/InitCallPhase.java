@@ -40,21 +40,20 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	@Override
 	public void init(KeyListenScene scene) {
 		// 背景を追加
-		scene.attachChild(scene.getBaseActivity().getResourceUtil().getSprite("battle/background.png"));
+		scene.attachChild(scene.getBaseActivity().getResourceUtil()
+				.getSprite("battle/background.png"));
 
 		DBAdapter adapter = new DBAdapter(scene.getBaseActivity()).open();
 		List<PlayerUnit> initialUnits = adapter.getBinder().getUnitList();
 		// スプライト生成
 		for (PlayerUnit unit : initialUnits) {
 			UnitSprite uSprite = new UnitSprite(scene.getBaseActivity().getResourceUtil()
-					.getSprite("unit/" + unit.getImagePath()));
-			uSprite.setUnitData(unit);
-			uSprite.setZIndex(3);
-			uSprite.setFlippedHorizontal(true);
+					.getSprite("unit/" + unit.getImagePath().replace(".png", "_c.png")), unit);
+			uSprite.setText(scene.getBaseActivity());
 			uSprite.setCollisionListener(this);
 			uSprite.setUnitPositionListener(this);
 			playerUnits.add(uSprite);
-//			scene.attachChild(uSprite);
+			// scene.attachChild(uSprite);
 			scene.registerTouchArea(uSprite);
 			scene.setTouchAreaBindingOnActionDownEnabled(true);
 		}
@@ -97,7 +96,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 		for (FieldSprite field : fields) {
 			if (unit.collidesWith(field) && !isCollision) {
 				// フィールドの点滅
-				Effects.Flash(field, 0.3f);
+				Effects.flash(field, 0.3f);
 				isCollision = true;
 			} else {
 				field.clearEntityModifiers();
@@ -117,8 +116,8 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				// フィールドに貼り付け
 				float centerX = field.getX() + field.getWidth() / 2;
 				float centerY = field.getY() + 40;
-				unit.registerEntityModifier(new MoveModifier(1.0f, unit.getX(), centerX - unit.getWidth() / 2, unit
-						.getY(), centerY - unit.getHeight()));
+				unit.registerEntityModifier(new MoveModifier(1.0f, unit.getX(), centerX
+						- unit.getWidth() / 2, unit.getY(), centerY - unit.getHeight()));
 				unit.setState(States.PRE_FIELD);
 				unit.onFieldUnitSprite(unit);
 				field.setUse(true);
