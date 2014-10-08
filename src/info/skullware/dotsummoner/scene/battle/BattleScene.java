@@ -6,9 +6,9 @@ import info.skullware.dotsummoner.scene.battle.listener.NextPhaseListener;
 import info.skullware.dotsummoner.scene.battle.phase.AbstractPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitCallPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitiativePhase;
+import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
-import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,45 @@ import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
 import android.view.KeyEvent;
 
 public class BattleScene extends KeyListenScene implements OnClickListener, NextPhaseListener {
+
+	public class BattleDto {
+		private List<CardSprite> cards = new ArrayList<CardSprite>();
+		private DeckArea deckArea;
+		private List<FieldSprite> playerFields;
+		private List<FieldSprite> enemyFields;
+
+		public List<CardSprite> getCards() {
+			return cards;
+		}
+
+		public void setCards(List<CardSprite> cards) {
+			this.cards = cards;
+		}
+
+		public DeckArea getDeckArea() {
+			return deckArea;
+		}
+
+		public void setDeckArea(DeckArea deckArea) {
+			this.deckArea = deckArea;
+		}
+
+		public List<FieldSprite> getPlayerFields() {
+			return playerFields;
+		}
+
+		public void setPlayerFields(List<FieldSprite> playerFields) {
+			this.playerFields = playerFields;
+		}
+
+		public List<FieldSprite> getEnemyFields() {
+			return enemyFields;
+		}
+
+		public void setEnemyFields(List<FieldSprite> enemyFields) {
+			this.enemyFields = enemyFields;
+		}
+	}
 
 	// public static enum States {
 	// // 初回召喚フェイズ
@@ -43,9 +82,10 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 		init();
 	}
 
-	private List<UnitSprite> playerUnits = new ArrayList<UnitSprite>();
+	private List<CardSprite> cards = new ArrayList<CardSprite>();
 	private DeckArea deckArea;
-	private List<FieldSprite> fields;
+	private List<FieldSprite> playerFields;
+	private List<FieldSprite> enemyFields;
 
 	/*
 	 * 初期処理
@@ -54,8 +94,12 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 	 */
 	@Override
 	public void init() {
+		BattleDto dto = new BattleDto();
+		// 背景を追加
+		this.attachChild(getBaseActivity().getResourceUtil()
+				.getSprite("battle/background.png"));
 		// 初回召喚フェイズ
-		InitCallPhase initCall = new InitCallPhase(playerUnits, deckArea, fields);
+		InitCallPhase initCall = new InitCallPhase(dto);
 		initCall.setNextPhaseListener(this);
 		initCall.init(this);
 	}

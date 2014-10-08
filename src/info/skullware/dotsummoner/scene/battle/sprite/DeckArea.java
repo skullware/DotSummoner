@@ -1,5 +1,6 @@
 package info.skullware.dotsummoner.scene.battle.sprite;
 
+import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
 
 import java.util.List;
@@ -13,14 +14,16 @@ public class DeckArea extends Rectangle {
 
 	public static int HEIGHT = 128;
 	public static int WIDTH = 800;
+	public static int ZINDEX = 2;
 
 	private float fx;
 
 	public DeckArea(KeyListenScene scene) {
-		super(0, 480 - HEIGHT, WIDTH, HEIGHT, scene.getBaseActivity().getVertexBufferObjectManager());
+		super(0, MainActivity.HEIGHT - HEIGHT, WIDTH, HEIGHT, scene.getBaseActivity()
+				.getVertexBufferObjectManager());
 		this.setColor(org.andengine.util.color.Color.BLACK);
 		this.setAlpha(0.5f);
-		this.setZIndex(2);
+		this.setZIndex(ZINDEX);
 		scene.attachChild(this);
 		scene.registerTouchArea(this);
 	}
@@ -32,7 +35,8 @@ public class DeckArea extends Rectangle {
 	 * input.touch.TouchEvent, float, float)
 	 */
 	@Override
-	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX,
+			float pTouchAreaLocalY) {
 		Sprite first = (Sprite) this.getFirstChild();
 		Sprite last = (Sprite) this.getLastChild();
 		if (last.getX() + last.getWidth() < 800)
@@ -51,9 +55,10 @@ public class DeckArea extends Rectangle {
 			if (last.getX() + last.getWidth() + dx < 790)
 				dx = 790 - (last.getX() + last.getWidth());
 			for (int index = 0; index < this.getChildCount(); index++) {
-				UnitSprite unit = (UnitSprite) this.getChildByIndex(index);
+				CardSprite unit = (CardSprite) this.getChildByIndex(index);
 				if (unit.isStateDeck())
-					unit.registerEntityModifier(new MoveXModifier(0.01f, unit.getX(), unit.getX() + dx));
+					unit.registerEntityModifier(new MoveXModifier(0.01f, unit.getX(), unit.getX()
+							+ dx));
 			}
 			break;
 		}
@@ -61,10 +66,11 @@ public class DeckArea extends Rectangle {
 		return true;
 	}
 
-	public void setDeckUnits(List<UnitSprite> sprites) {
+	public void setDeckUnits(List<CardSprite> sprites) {
 		this.detachChildren();
-		for (UnitSprite unitSprite : sprites) {
+		for (CardSprite unitSprite : sprites) {
 			if (unitSprite.isStateDeck()) {
+				unitSprite.setZIndex(this.getZIndex() + 1);
 				this.attachChild(unitSprite);
 			}
 		}
@@ -72,7 +78,7 @@ public class DeckArea extends Rectangle {
 		for (int index = 0; index < this.getChildCount(); index++) {
 			Sprite unit = (Sprite) this.getChildByIndex(index);
 			unit.setPosition(currentX, HEIGHT - 10 - unit.getHeight());
-			currentX += unit.getWidth();
+			currentX += unit.getWidth() + 5;
 		}
 	}
 }

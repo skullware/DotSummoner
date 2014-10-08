@@ -1,6 +1,6 @@
 package info.skullware.dotsummoner.scene.battle.listener;
 
-import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
+import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 
 import java.util.EventListener;
 
@@ -12,9 +12,9 @@ import java.util.EventListener;
  */
 public interface CollisionListener extends EventListener {
 
-	public void onCollisionAtFieldWithDown(UnitSprite unit);
+	public void onCollisionAtFieldWithDown(CardSprite unit);
 
-	public boolean onCollisionAtFieldWithUp(UnitSprite unit);
+	public boolean onCollisionAtFieldWithUp(CardSprite unit);
 
-	public void onCollisionAtFieldWithMove(UnitSprite unit);
+	public void onCollisionAtFieldWithMove(CardSprite unit);
 }

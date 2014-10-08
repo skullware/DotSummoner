@@ -24,16 +24,17 @@ public class PixelMplus {
 	};
 
 	public static Text getTextRegular10(MultiSceneActivity activity, String text, float pX, float pY) {
-		return getTextPmp(activity, text, pX, pY, 28, FontWeight.REGULAR10, Color.WHITE);		
+		return getTextPmp(activity, text, pX, pY, 28, FontWeight.REGULAR10, Color.WHITE);
 	}
-	
+
 	public static Text getTextRegular12(MultiSceneActivity activity, String text, float pX, float pY) {
 		return getTextPmp(activity, text, pX, pY, 28, FontWeight.REGULAR12, Color.WHITE);
 	}
 
-	public static Text getTextPmp(MultiSceneActivity activity, String text, float pX, float pY, int size,
-			FontWeight weight, int color) {
-		ITexture texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+	public static Text getTextPmp(MultiSceneActivity activity, String text, float pX, float pY,
+			int size, FontWeight weight, int color) {
+		ITexture texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256,
+				TextureOptions.BILINEAR);
 		String fontWeight = null;
 		switch (weight) {
 		case REGULAR10:
@@ -51,9 +52,13 @@ public class PixelMplus {
 		default:
 			break;
 		}
-		Font font = FontFactory.createFromAsset(activity.getFontManager(), texture, activity.getAssets(), fontWeight,
-				size, true, color);
+		Font font = FontFactory.createFromAsset(activity.getFontManager(), texture,
+				activity.getAssets(), fontWeight, size, true, color);
 		font.load();
 		return new Text(pX, pY, font, text, activity.getVertexBufferObjectManager());
+	}
+
+	public static void setDefaultColor(Text text) {
+		text.setColor(85f, 72f, 62f);
 	}
 }
