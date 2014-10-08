@@ -43,6 +43,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 
 	@Override
 	public void init(KeyListenScene scene) {
+
 		DBAdapter adapter = new DBAdapter(scene.getBaseActivity()).open();
 		List<PlayerUnit> initialUnits = adapter.getBinder().getUnitList();
 		// カードスプライト生成

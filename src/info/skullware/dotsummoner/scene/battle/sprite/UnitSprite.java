@@ -11,5 +11,4 @@ public class UnitSprite extends Sprite {
 		super(pX, pY, pWidth, pHeight, pTextureRegion, pSpriteVertexBufferObject);
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
-
 }
