@@ -39,7 +39,7 @@ public class DeckArea extends Rectangle {
 			float pTouchAreaLocalY) {
 		Sprite first = (Sprite) this.getFirstChild();
 		Sprite last = (Sprite) this.getLastChild();
-		if (last.getX() + last.getWidth() < 800)
+		if ((last.getX() + last.getWidth()) - first.getX() < 800)
 			return true;
 
 		float x = pSceneTouchEvent.getX();

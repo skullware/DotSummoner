@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.andengine.entity.modifier.MoveModifier;
+import org.andengine.entity.modifier.RotationByModifier;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
@@ -67,6 +68,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				FieldSprite field = new FieldSprite(scene.getBaseActivity().getResourceUtil()
 						.getSprite("battle/field.png"));
 				field.setPosition(430 + n * 20 + i * 100, 280 - n * 65);
+				field.setZIndex((3 - n) * 10);
 				playerFields.add(field);
 				scene.attachChild(field);
 			}
@@ -90,10 +92,10 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	 */
 	@Override
 	public void onCollisionAtFieldWithDown(CardSprite card) {
-//		// フィールドの可視化
-//		for (FieldSprite fieldSprite : playerFields) {
-//			fieldSprite.setVisible(true);
-//		}
+		// // フィールドの可視化
+		// for (FieldSprite fieldSprite : playerFields) {
+		// fieldSprite.setVisible(true);
+		// }
 	}
 
 	/**
@@ -122,24 +124,23 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	public boolean onCollisionAtFieldWithUp(CardSprite card) {
 		// フィールドとの衝突判定
 		for (FieldSprite field : playerFields) {
-			if (card.collidesWith(field)) {
+			if (card.collidesWith(field) && !field.isUse()) {
 				// フィールドに貼り付け
-				float centerX = field.getX() + field.getWidth() / 2;
-				float centerY = field.getY() + 40;
-				card.registerEntityModifier(new MoveModifier(1.0f, card.getX(), centerX
-						- card.getWidth() / 2, card.getY(), centerY - card.getHeight()
-						- (MainActivity.HEIGHT - DeckArea.HEIGHT)));
 				card.setState(States.PRE_FIELD);
 				card.onFieldUnitSprite(card);
+				field.attachChild(card);
+				card.setPosition(field.getWidth() / 2 - card.getWidth() / 2, 40 - card.getHeight());
+				card.setZIndex(field.getZIndex() + 1);
+				card.setRotation(10f);
 				field.setUse(true);
 				field.clearEntityModifiers();
 				return true;
 			}
 		}
-//		// タイル不可視
-//		for (FieldSprite fieldSprite : playerFields) {
-//			fieldSprite.setVisible(false);
-//		}
+		// // タイル不可視
+		// for (FieldSprite fieldSprite : playerFields) {
+		// fieldSprite.setVisible(false);
+		// }
 		return false;
 	}
 
