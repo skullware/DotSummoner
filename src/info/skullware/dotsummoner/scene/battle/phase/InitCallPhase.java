@@ -1,10 +1,12 @@
 package info.skullware.dotsummoner.scene.battle.phase;
 
-import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.util.Effects;
+import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.EnemyUnit;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
+import info.skullware.dotsummoner.scene.battle.BattleScene;
 import info.skullware.dotsummoner.scene.battle.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
 import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
@@ -16,6 +18,8 @@ import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.andengine.entity.text.Text;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
@@ -43,7 +47,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	}
 
 	@Override
-	public void init(KeyListenScene scene) {
+	public void init(BattleScene scene) {
 
 		DBAdapter adapter = new DBAdapter(scene.getBaseActivity()).open();
 		List<PlayerUnit> initialUnits = adapter.getBinder().getUnitList();
@@ -58,6 +62,12 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			scene.registerTouchArea(uSprite);
 			scene.setTouchAreaBindingOnActionDownEnabled(true);
 		}
+		// コスト表示
+		Text cost = PixelMplus.getStrokeTextRegular12(scene.getBaseActivity(), "COST 000/123", 0,
+				10);
+		cost.setX(MainActivity.WIDTH - cost.getWidth() - 10);
+		// PixelMplus.setDefaultColor(cost);
+		scene.attachChild(cost);
 		// デックエリア設定
 		deckArea = new DeckArea(scene);
 		deckArea.setDeckUnits(cards);

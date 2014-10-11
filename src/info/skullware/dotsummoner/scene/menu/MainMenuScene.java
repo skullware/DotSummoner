@@ -12,6 +12,7 @@ import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.util.color.Color;
 
 import android.view.KeyEvent;
 
@@ -46,7 +47,7 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 
 		// TextArea
 		Rectangle area = new Rectangle(10, 300, 780, 160, getBaseActivity().getVertexBufferObjectManager());
-		area.setColor(org.andengine.util.color.Color.BLACK);
+		area.setColor(Color.BLACK);
 		area.registerEntityModifier(new AlphaModifier(3, 0, 0.5f));
 		this.attachChild(area);
 
