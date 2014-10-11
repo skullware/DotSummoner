@@ -59,6 +59,6 @@ public class PixelMplus {
 	}
 
 	public static void setDefaultColor(Text text) {
-		text.setColor(85f, 72f, 62f);
+		text.setColor(95f, 79f, 66f);
 	}
 }

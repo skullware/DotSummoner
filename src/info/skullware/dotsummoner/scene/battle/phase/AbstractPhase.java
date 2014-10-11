@@ -1,6 +1,6 @@
 package info.skullware.dotsummoner.scene.battle.phase;
 
-import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.scene.battle.BattleScene;
 import info.skullware.dotsummoner.scene.battle.listener.NextPhaseListener;
 
 public abstract class AbstractPhase {
@@ -15,7 +15,7 @@ public abstract class AbstractPhase {
 		this.nextPhaseListener = nextPhaseListener;
 	}
 
-	public abstract void init(KeyListenScene scene);
+	public abstract void init(BattleScene scene);
 
 	public abstract void finish();
 }
