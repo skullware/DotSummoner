@@ -26,7 +26,7 @@ public class Binder {
 
 			if (cursor != null && cursor.moveToFirst()) {
 				for (int i = 1; i <= cursor.getCount(); i++) {
-					PlayerUnit unit = new PlayerUnit(cursor.getString(1), cursor.getString(14));
+					PlayerUnit unit = new PlayerUnit(cursor.getString(1));
 					unit.setUseDeck(cursor.getInt(2) != 0);
 					unit.setLevel(cursor.getInt(3));
 					unit.setExp(cursor.getInt(4));
@@ -38,6 +38,7 @@ public class Binder {
 					unit.setCounterValue(cursor.getInt(10));
 					unit.setPassiveValue(cursor.getInt(11));
 
+					unit.setImagePath(cursor.getString(14));
 					unit.setRarity(cursor.getInt(15));
 					unit.setName(cursor.getString(16));
 					unit.setCost(cursor.getInt(17));

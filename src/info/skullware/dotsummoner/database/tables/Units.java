@@ -20,7 +20,8 @@ public class Units {
 			cursor = db.rawQuery(sql, null);
 
 			if (cursor != null && cursor.moveToFirst()) {
-				PlayerUnit unit = new PlayerUnit(cursor.getString(1), cursor.getString(2));
+				PlayerUnit unit = new PlayerUnit(cursor.getString(1));
+				unit.setImagePath(cursor.getString(2));
 				unit.setRarity(cursor.getInt(3));
 				unit.setName(cursor.getString(4));
 				unit.setCost(cursor.getInt(5));

@@ -1,6 +1,5 @@
 package info.skullware.dotsummoner.param.unit;
 
-
 public class Unit {
 
 	private String unitId;
@@ -22,9 +21,8 @@ public class Unit {
 	private int passiveId;
 	private int passiveValue;
 
-	public Unit(String unitId, String imagePath) {
+	public Unit(String unitId) {
 		this.unitId = unitId;
-		this.imagePath = imagePath;
 	}
 
 	public String getUnitId() {

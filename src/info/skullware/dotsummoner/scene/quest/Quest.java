@@ -42,8 +42,13 @@ public class Quest {
 				this.name = item[1];
 			if (item[0].equals("Cost"))
 				this.maxCost = Integer.valueOf(item[1]);
-			if (item[0].equals("Enemy"))
-				this.enemys.add(new EnemyUnit(adapter.getUnits().getUnit(item[1])));
+			if (item[0].equals("Enemy")) {
+				EnemyUnit unit = new EnemyUnit(adapter.getUnits().getUnit(item[1]));
+				unit.setLevel(Integer.valueOf(item[2]));
+				unit.setPosition(Integer.valueOf(item[3]));
+				unit.setInitial(Integer.valueOf(item[4]));
+				this.enemys.add(unit);
+			}
 		}
 	}
 

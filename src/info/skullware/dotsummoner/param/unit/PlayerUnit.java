@@ -7,8 +7,8 @@ public class PlayerUnit extends Unit {
 	private int exp;
 	private int next;
 
-	public PlayerUnit(String unitId, String imagePath) {
-		super(unitId, imagePath);
+	public PlayerUnit(String unitId) {
+		super(unitId);
 	}
 
 	public boolean isUseDeck() {
