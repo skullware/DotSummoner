@@ -6,6 +6,7 @@ import info.skullware.dotsummoner.scene.battle.listener.NextPhaseListener;
 import info.skullware.dotsummoner.scene.battle.phase.AbstractPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitCallPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitiativePhase;
+import info.skullware.dotsummoner.scene.quest.Quest;
 
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
@@ -14,22 +15,22 @@ import android.view.KeyEvent;
 
 public class BattleScene extends KeyListenScene implements OnClickListener, NextPhaseListener {
 
-	public BattleScene(MultiSceneActivity baseActivity) {
+	public BattleScene(MultiSceneActivity baseActivity, int questId) {
 		super(baseActivity);
-		init();
+		init(questId);
 	}
-	
+
 	/*
 	 * 初期処理
 	 * 
 	 * @see info.skullware.dotsummoner.common.KeyListenScene#init()
 	 */
-	@Override
-	public void init() {
+	public void init(int questId) {
 		BattleSceneDto dto = new BattleSceneDto();
 		// 背景を追加
-		this.attachChild(getBaseActivity().getResourceUtil()
-				.getSprite("battle/background.png"));
+		this.attachChild(getBaseActivity().getResourceUtil().getSprite("battle/background.png"));
+		// クエスト読み込み
+		dto.setQuest(new Quest(getBaseActivity(), questId));
 		// 初回召喚フェイズ
 		InitCallPhase initCall = new InitCallPhase(dto);
 		initCall.setNextPhaseListener(this);
@@ -61,6 +62,12 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 	public boolean dispatchKeyEvent(KeyEvent e) {
 		// TODO 自動生成されたメソッド・スタブ
 		return false;
+	}
+
+	@Override
+	public void init() {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 }

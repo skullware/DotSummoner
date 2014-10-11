@@ -7,4 +7,8 @@ public class EnemyUnit extends Unit {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
+	public EnemyUnit(Unit unit) {
+		super(unit.getUnitId(), unit.getImagePath());
+	}
+
 }

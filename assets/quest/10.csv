@@ -1,0 +1,7 @@
+Name,最初のクエスト
+Cost,10
+,Enemy,ユニットID,Level,Position(0-8),Initial(bool)
+Enemy,U00320,10,0,1
+Enemy,U00110,5,3,1
+Enemy,U00110,10,4,1
+Enemy,U00120,10,7,0

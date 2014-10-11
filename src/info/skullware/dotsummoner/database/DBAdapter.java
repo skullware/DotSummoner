@@ -13,45 +13,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBAdapter {
-	static final String DATABASE_NAME = "dotsummoner.db";
-	static final int VERSION = 1;
-
-	protected final Context context;
-	protected DatabaseHelper dbHelper;
-	protected SQLiteDatabase db;
-
-	/*
-	 * コンストラクタ
+	/**
+	 * DBヘルパークラス
+	 * @author chibo
+	 *
 	 */
-	public DBAdapter(Context context) {
-		this.context = context;
-		dbHelper = new DatabaseHelper(this.context);
-	}
-
-	/*
-	 * 開く
-	 */
-	public DBAdapter open() {
-		this.db = dbHelper.getWritableDatabase();
-		this.binder = new Binder(db);
-		return this;
-	}
-
-	/*
-	 * 閉じる
-	 */
-	public void close() {
-		if (db != null)
-			db.close();
-		if (dbHelper != null)
-			dbHelper.close();
-	}
-
-	// バインダー
-	private Binder binder;
-	// ユニット
-	private Units units;
-
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
 		private Context context;
@@ -91,17 +57,56 @@ public class DBAdapter {
 
 		}
 	}
+	static final String DATABASE_NAME = "dotsummoner.db";
+
+	static final int VERSION = 1;
+	protected final Context context;
+	protected DatabaseHelper dbHelper;
+
+	protected SQLiteDatabase db;
+
+	// バインダー
+	private Binder binder;
+
+	// ユニット
+	private Units units;
+
+	/*
+	 * コンストラクタ
+	 */
+	public DBAdapter(Context context) {
+		this.context = context;
+		dbHelper = new DatabaseHelper(this.context);
+	}
+	/*
+	 * 閉じる
+	 */
+	public void close() {
+		if (db != null)
+			db.close();
+		if (dbHelper != null)
+			dbHelper.close();
+	}
 
 	public Binder getBinder() {
 		return binder;
 	}
 
-	public void setBinder(Binder binder) {
-		this.binder = binder;
-	}
-
 	public Units getUnits() {
 		return units;
+	}
+
+	/*
+	 * 開く
+	 */
+	public DBAdapter open() {
+		this.db = dbHelper.getWritableDatabase();
+		this.binder = new Binder(db);
+		return this;
+	}
+
+	public void setBinder(Binder binder) {
+		this.binder = binder;
 	}
 
 	public void setUnits(Units units) {

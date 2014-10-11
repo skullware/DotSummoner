@@ -31,7 +31,8 @@ public class MainMenuButton {
 		player.setPosition(480, 5);
 		scene.attachChild(player);
 
-		ButtonSprite btnStory = activity.getResourceUtil().getButtonSprite("button/story.png", "button/story_s.png");
+		ButtonSprite btnStory = activity.getResourceUtil().getButtonSprite("button/story.png",
+				"button/story_s.png");
 		btnStory.setPosition(650, 30);
 		btnStory.setTag(BUTTON_STORY);
 		btnStory.setOnClickListener(listener);
@@ -39,7 +40,8 @@ public class MainMenuButton {
 		scene.registerTouchArea(btnStory);
 		setSlideButton(activity, btnStory);
 
-		ButtonSprite btnParty = activity.getResourceUtil().getButtonSprite("button/party.png", "button/party.png");
+		ButtonSprite btnParty = activity.getResourceUtil().getButtonSprite("button/party.png",
+				"button/party.png");
 		btnParty.setPosition(650, btnStory.getY() + btnStory.getHeight());
 		btnParty.setTag(BUTTON_PARTY);
 		btnParty.setOnClickListener(listener);
@@ -56,7 +58,8 @@ public class MainMenuButton {
 		scene.registerTouchArea(btnBarcode);
 		setSlideButton(activity, btnBarcode);
 
-		ButtonSprite btnOption = activity.getResourceUtil().getButtonSprite("button/option.png", "button/option.png");
+		ButtonSprite btnOption = activity.getResourceUtil().getButtonSprite("button/option.png",
+				"button/option.png");
 		btnOption.setPosition(650, btnBarcode.getY() + btnBarcode.getHeight());
 		btnOption.setTag(BUTTON_OPTION);
 		btnOption.setOnClickListener(listener);
@@ -70,7 +73,7 @@ public class MainMenuButton {
 		case BUTTON_STORY:
 			// リソースの解放
 			ResourceUtil.getInstance(activity).resetAllTexture();
-			KeyListenScene scene = new BattleScene(activity);
+			KeyListenScene scene = new BattleScene(activity, 10);
 			// MainSceneへ移動
 			activity.getEngine().setScene(scene);
 			// 遷移管理用配列に追加
@@ -86,7 +89,8 @@ public class MainMenuButton {
 		mapname.setPosition(5, 5);
 		scene.attachChild(mapname);
 
-		Text text = PixelMplus.getTextPmp(activity, "竜の天国亭", 50, 15, 36, FontWeight.BOLD12, Color.rgb(85, 72, 62));
+		Text text = PixelMplus.getTextPmp(activity, "竜の天国亭", 50, 15, 36, FontWeight.BOLD12,
+				Color.rgb(85, 72, 62));
 		scene.attachChild(text);
 
 		Sprite icon = activity.getResourceUtil().getSprite("icon/sakaba.png");
@@ -96,8 +100,10 @@ public class MainMenuButton {
 
 	private static void setSlideButton(MultiSceneActivity activity, ButtonSprite button) {
 		float btnX = button.getX();
-		button.setPosition(button.getX() + activity.getEngine().getCamera().getWidth(), button.getY());
-		button.registerEntityModifier(new SequenceEntityModifier(new DelayModifier(1.4f), new MoveModifier(1.0f, button
-				.getX(), btnX, button.getY(), button.getY(), EaseBackInOut.getInstance())));
+		button.setPosition(button.getX() + activity.getEngine().getCamera().getWidth(),
+				button.getY());
+		button.registerEntityModifier(new SequenceEntityModifier(new DelayModifier(1.4f),
+				new MoveModifier(1.0f, button.getX(), btnX, button.getY(), button.getY(),
+						EaseBackInOut.getInstance())));
 	}
 }

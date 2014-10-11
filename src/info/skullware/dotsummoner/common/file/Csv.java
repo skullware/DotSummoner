@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 public class Csv {
 
@@ -19,12 +22,12 @@ public class Csv {
 	 * @param filename
 	 * @return
 	 */
-	public static String read(Activity activity, String filename) {
+	public static List<String[]> read(final Activity activity, String filename) {
 		// TXT読み込み
 		InputStream is = null;
 		BufferedReader br = null;
 
-		StringBuilder sb = new StringBuilder();
+		List<String[]> list = new ArrayList<String[]>();
 		try {
 			try {
 				is = activity.getAssets().open(filename);
@@ -32,17 +35,22 @@ public class Csv {
 
 				String str;
 				while ((str = br.readLine()) != null) {
-					sb.append(str + "\n");
+					list.add(str.split(","));
 				}
 			} finally {
 				if (br != null) {
 					br.close();
 				}
 			}
-		} catch (IOException e) {
-			// 読み込みエラー
+		} catch (final IOException e) {
+			activity.runOnUiThread(new Runnable() {
+			     @Override
+			     public void run() {
+			          Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+			     }
+			});
 		}
 
-		return sb.toString();
+		return list;
 	}
 }
