@@ -6,12 +6,6 @@ import info.skullware.dotsummoner.scene.battle.listener.NextPhaseListener;
 import info.skullware.dotsummoner.scene.battle.phase.AbstractPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitCallPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitiativePhase;
-import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
-import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
-import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
@@ -20,73 +14,11 @@ import android.view.KeyEvent;
 
 public class BattleScene extends KeyListenScene implements OnClickListener, NextPhaseListener {
 
-	public class BattleDto {
-		private List<CardSprite> cards = new ArrayList<CardSprite>();
-		private DeckArea deckArea;
-		private List<FieldSprite> playerFields;
-		private List<FieldSprite> enemyFields;
-
-		public List<CardSprite> getCards() {
-			return cards;
-		}
-
-		public void setCards(List<CardSprite> cards) {
-			this.cards = cards;
-		}
-
-		public DeckArea getDeckArea() {
-			return deckArea;
-		}
-
-		public void setDeckArea(DeckArea deckArea) {
-			this.deckArea = deckArea;
-		}
-
-		public List<FieldSprite> getPlayerFields() {
-			return playerFields;
-		}
-
-		public void setPlayerFields(List<FieldSprite> playerFields) {
-			this.playerFields = playerFields;
-		}
-
-		public List<FieldSprite> getEnemyFields() {
-			return enemyFields;
-		}
-
-		public void setEnemyFields(List<FieldSprite> enemyFields) {
-			this.enemyFields = enemyFields;
-		}
-	}
-
-	// public static enum States {
-	// // 初回召喚フェイズ
-	// INIT_CALL,
-	// // 先攻後攻判定フェイズ
-	// INITIATIVE,
-	// // 先攻攻撃フェイズ
-	// FIRST_PLAY,
-	// // 後攻攻撃フェイズ
-	// SECOND_PLAY,
-	// // 状態リセットフェイズ
-	// RESET_STATE,
-	// // 召喚フェイズ
-	// UNIT_CALL
-	// };
-	//
-	// private DBAdapter adapter;
-	// private States state;
-
 	public BattleScene(MultiSceneActivity baseActivity) {
 		super(baseActivity);
 		init();
 	}
-
-	private List<CardSprite> cards = new ArrayList<CardSprite>();
-	private DeckArea deckArea;
-	private List<FieldSprite> playerFields;
-	private List<FieldSprite> enemyFields;
-
+	
 	/*
 	 * 初期処理
 	 * 
@@ -94,7 +26,7 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 	 */
 	@Override
 	public void init() {
-		BattleDto dto = new BattleDto();
+		BattleSceneDto dto = new BattleSceneDto();
 		// 背景を追加
 		this.attachChild(getBaseActivity().getResourceUtil()
 				.getSprite("battle/background.png"));

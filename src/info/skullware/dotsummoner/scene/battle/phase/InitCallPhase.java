@@ -1,11 +1,10 @@
 package info.skullware.dotsummoner.scene.battle.phase;
 
-import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
-import info.skullware.dotsummoner.scene.battle.BattleScene.BattleDto;
+import info.skullware.dotsummoner.scene.battle.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
 import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
@@ -16,17 +15,14 @@ import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.andengine.entity.modifier.MoveModifier;
-import org.andengine.entity.modifier.RotationByModifier;
-
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
 	private List<CardSprite> cards;
 	private DeckArea deckArea;
-	private List<FieldSprite> playerFields;
 	private List<FieldSprite> enemyFields;
+	private List<FieldSprite> playerFields;
 
-	public InitCallPhase(BattleDto dto) {
+	public InitCallPhase(BattleSceneDto dto) {
 		this.cards = dto.getCards();
 		this.deckArea = dto.getDeckArea();
 		this.playerFields = dto.getPlayerFields();
@@ -125,7 +121,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 		// フィールドとの衝突判定
 		for (FieldSprite field : playerFields) {
 			if (card.collidesWith(field) && !field.isUse()) {
-				// フィールドに貼り付け
+				// フィールドに貼り付けO
 				card.setState(States.PRE_FIELD);
 				card.onFieldUnitSprite(card);
 				field.attachChild(card);
