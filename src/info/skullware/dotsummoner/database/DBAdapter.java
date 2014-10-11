@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBAdapter {
 	/**
 	 * DBヘルパークラス
+	 * 
 	 * @author chibo
 	 *
 	 */
@@ -57,6 +58,7 @@ public class DBAdapter {
 
 		}
 	}
+
 	static final String DATABASE_NAME = "dotsummoner.db";
 
 	static final int VERSION = 1;
@@ -78,6 +80,7 @@ public class DBAdapter {
 		this.context = context;
 		dbHelper = new DatabaseHelper(this.context);
 	}
+
 	/*
 	 * 閉じる
 	 */
@@ -102,6 +105,7 @@ public class DBAdapter {
 	public DBAdapter open() {
 		this.db = dbHelper.getWritableDatabase();
 		this.binder = new Binder(db);
+		this.units = new Units(db);
 		return this;
 	}
 

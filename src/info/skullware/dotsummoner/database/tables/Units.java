@@ -1,6 +1,5 @@
 package info.skullware.dotsummoner.database.tables;
 
-import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.param.unit.Unit;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,11 +15,11 @@ public class Units {
 	public Unit getUnit(String unitId) {
 		Cursor cursor = null;
 		try {
-			String sql = "select * from units";
+			String sql = "select * from units where unit_id = '" + unitId + "'";
 			cursor = db.rawQuery(sql, null);
 
 			if (cursor != null && cursor.moveToFirst()) {
-				PlayerUnit unit = new PlayerUnit(cursor.getString(1));
+				Unit unit = new Unit(cursor.getString(1));
 				unit.setImagePath(cursor.getString(2));
 				unit.setRarity(cursor.getInt(3));
 				unit.setName(cursor.getString(4));

@@ -3,6 +3,7 @@ package info.skullware.dotsummoner.scene.battle.phase;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.database.DBAdapter;
+import info.skullware.dotsummoner.param.unit.EnemyUnit;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
@@ -11,6 +12,7 @@ import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite.States;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
+import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	private DeckArea deckArea;
 	private List<FieldSprite> enemyFields;
 	private List<FieldSprite> playerFields;
+	private List<EnemyUnit> enemys;
 
 	public InitCallPhase(BattleSceneDto dto) {
 		this.cards = dto.getCards();
@@ -31,6 +34,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			card.setCollisionListener(this);
 			card.setUnitPositionListener(this);
 		}
+		this.enemys = dto.getQuest().getEnemys();
 	}
 
 	@Override
@@ -75,10 +79,20 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				FieldSprite field = new FieldSprite(scene.getBaseActivity().getResourceUtil()
 						.getSprite("battle/field.png"));
 				field.setPosition(370 - n * 20 - i * 100 - field.getWidth(), 280 - n * 65);
+				field.setZIndex((3 - n) * 10);
 				field.setFlippedHorizontal(true);
 				enemyFields.add(field);
 				scene.attachChild(field);
 			}
+		}
+		// Enemy設定
+		for (EnemyUnit enemy : enemys) {
+			UnitSprite eSprite = new UnitSprite(scene.getBaseActivity().getResourceUtil()
+					.getSprite("unit/" + enemy.getImagePath()), enemy);
+			FieldSprite field = enemyFields.get(enemy.getPosition());
+			field.attachChild(eSprite);
+			eSprite.setPosition(field.getWidth() / 2 - eSprite.getWidth() / 2, 40 - eSprite.getHeight());
+			eSprite.setZIndex(field.getZIndex() + 1);
 		}
 		scene.sortChildren();
 	}

@@ -13,6 +13,23 @@ public class EnemyUnit extends Unit {
 
 	public EnemyUnit(Unit unit) {
 		super(unit.getUnitId());
+		 this.setImagePath(unit.getImagePath());
+		 this.setRarity(unit.getRarity());
+		 this.setName(unit.getName());
+		 this.setCost(unit.getCost());
+		 this.setLife(unit.getLife());
+		 this.setAttack(unit.getAttack());
+		 this.setRange(unit.getRange());
+
+		 this.setActionName(unit.getActionName());
+		 this.setActionId(unit.getActionId());
+		 this.setActionValue(unit.getActionValue());
+		 this.setCounterName(unit.getCounterName());
+		 this.setCounterId(unit.getCounterId());
+		 this.setCounterValue(unit.getCounterValue());
+		 this.setPassiveName(unit.getPassiveName());
+		 this.setPassiveId(unit.getPassiveId());
+		 this.setPassiveValue(unit.getPassiveValue());
 	}
 
 	public int getLevel() {
