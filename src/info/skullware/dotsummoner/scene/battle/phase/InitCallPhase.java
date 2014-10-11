@@ -3,7 +3,6 @@ package info.skullware.dotsummoner.scene.battle.phase;
 import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
-import info.skullware.dotsummoner.common.util.PixelMplus.FontWeight;
 import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.BattleScene;
@@ -19,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.andengine.entity.text.Text;
-
-import android.graphics.Color;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
@@ -62,10 +59,10 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			scene.setTouchAreaBindingOnActionDownEnabled(true);
 		}
 		// コスト表示
-		Text cost = PixelMplus.getTextPmp(scene.getBaseActivity(), "COST 000/000", 0, 10, 28,
-				FontWeight.BOLD12, Color.BLACK);
+		Text cost = PixelMplus.getStrokeTextRegular12(scene.getBaseActivity(), "COST 000/123", 0,
+				10);
 		cost.setX(MainActivity.WIDTH - cost.getWidth() - 10);
-		PixelMplus.setDefaultColor(cost);
+		// PixelMplus.setDefaultColor(cost);
 		scene.attachChild(cost);
 		// デックエリア設定
 		deckArea = new DeckArea(scene);
