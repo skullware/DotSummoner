@@ -3,42 +3,27 @@ package info.skullware.dotsummoner.scene.battle.phase;
 import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
-import info.skullware.dotsummoner.database.DBAdapter;
-import info.skullware.dotsummoner.param.unit.EnemyUnit;
-import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.BattleScene;
 import info.skullware.dotsummoner.scene.battle.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
 import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite.States;
-import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.andengine.entity.text.Text;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
-	private List<CardSprite> cards;
-	private DeckArea deckArea;
-	private List<FieldSprite> enemyFields;
-	private List<FieldSprite> playerFields;
-	private List<EnemyUnit> enemys;
+	private BattleSceneDto dto;
 
 	public InitCallPhase(BattleSceneDto dto) {
-		this.cards = dto.getCards();
-		this.deckArea = dto.getDeckArea();
-		this.playerFields = dto.getPlayerFields();
-		this.enemyFields = dto.getEnemyFields();
-		for (CardSprite card : cards) {
+		this.dto = dto;
+		for (CardSprite card : dto.getCards()) {
 			card.setCollisionListener(this);
 			card.setUnitPositionListener(this);
 		}
-		this.enemys = dto.getQuest().getEnemys();
 	}
 
 	@Override
@@ -48,61 +33,39 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 
 	@Override
 	public void init(BattleScene scene) {
-
-		DBAdapter adapter = new DBAdapter(scene.getBaseActivity()).open();
-		List<PlayerUnit> initialUnits = adapter.getBinder().getUnitList();
-		// カードスプライト生成
-		for (PlayerUnit unit : initialUnits) {
-			CardSprite uSprite = new CardSprite(scene.getBaseActivity().getResourceUtil()
-					.getSprite("unit/" + unit.getImagePath().replace(".png", "_c.png")), unit);
-			uSprite.setText(scene.getBaseActivity());
-			uSprite.setCollisionListener(this);
-			uSprite.setUnitPositionListener(this);
-			cards.add(uSprite);
-			scene.registerTouchArea(uSprite);
+		// 背景
+		scene.attachChild(dto.getBackground());
+		// カード
+		for (CardSprite card : dto.getCards()) {
+			card.setCollisionListener(this);
+			card.setUnitPositionListener(this);
+			scene.registerTouchArea(card);
 			scene.setTouchAreaBindingOnActionDownEnabled(true);
+
 		}
+		// デックエリア設定
+		scene.attachChild(dto.getDeckArea());
+		scene.registerTouchArea(dto.getDeckArea());
+		dto.getDeckArea().setDeckUnits(dto.getCards());
+
 		// コスト表示
 		Text cost = PixelMplus.getStrokeTextRegular12(scene.getBaseActivity(), "COST 000/123", 0,
 				10);
 		cost.setX(MainActivity.WIDTH - cost.getWidth() - 10);
-		// PixelMplus.setDefaultColor(cost);
 		scene.attachChild(cost);
-		// デックエリア設定
-		deckArea = new DeckArea(scene);
-		deckArea.setDeckUnits(cards);
 		// フィールド生成
-		playerFields = new ArrayList<FieldSprite>();
-		for (int i = 0; i < 3; i++) {
-			for (int n = 0; n < 3; n++) {
-				FieldSprite field = new FieldSprite(scene.getBaseActivity().getResourceUtil()
-						.getSprite("battle/field.png"));
-				field.setPosition(430 + n * 20 + i * 100, 280 - n * 65);
-				field.setZIndex((3 - n) * 10);
-				playerFields.add(field);
-				scene.attachChild(field);
-			}
+		for (FieldSprite field : dto.getPlayerFields()) {
+			scene.attachChild(field);
 		}
-		enemyFields = new ArrayList<FieldSprite>();
-		for (int i = 0; i < 3; i++) {
-			for (int n = 0; n < 3; n++) {
-				FieldSprite field = new FieldSprite(scene.getBaseActivity().getResourceUtil()
-						.getSprite("battle/field.png"));
-				field.setPosition(370 - n * 20 - i * 100 - field.getWidth(), 280 - n * 65);
-				field.setZIndex((3 - n) * 10);
-				field.setFlippedHorizontal(true);
-				enemyFields.add(field);
-				scene.attachChild(field);
-			}
+		for (FieldSprite field : dto.getEnemyFields()) {
+			scene.attachChild(field);
 		}
 		// Enemy設定
-		for (EnemyUnit enemy : enemys) {
-			UnitSprite eSprite = new UnitSprite(scene.getBaseActivity().getResourceUtil()
-					.getSprite("unit/" + enemy.getImagePath()), enemy);
-			FieldSprite field = enemyFields.get(enemy.getPosition());
-			field.attachChild(eSprite);
-			eSprite.setPosition(field.getWidth() / 2 - eSprite.getWidth() / 2, 40 - eSprite.getHeight());
-			eSprite.setZIndex(field.getZIndex() + 1);
+		for (UnitSprite enemy : dto.getEnemys()) {
+			FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
+			field.attachChild(enemy);
+			enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2, 40 - enemy.getHeight());
+			enemy.setZIndex(field.getZIndex() + 1);
 		}
 		scene.sortChildren();
 	}
@@ -125,7 +88,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	public void onCollisionAtFieldWithMove(CardSprite card) {
 		boolean isCollision = false;
 		// フィールドとの衝突判定
-		for (FieldSprite field : playerFields) {
+		for (FieldSprite field : dto.getPlayerFields()) {
 			if (card.collidesWith(field) && !isCollision) {
 				// フィールドの点滅
 				Effects.flash(field, 0.3f);
@@ -143,7 +106,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	@Override
 	public boolean onCollisionAtFieldWithUp(CardSprite card) {
 		// フィールドとの衝突判定
-		for (FieldSprite field : playerFields) {
+		for (FieldSprite field : dto.getPlayerFields()) {
 			if (card.collidesWith(field) && !field.isUse()) {
 				// フィールドに貼り付けO
 				card.setState(States.PRE_FIELD);
@@ -167,7 +130,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	@Override
 	public void onFieldUnitSprite(CardSprite card) {
 		// デックエリア再設定
-		deckArea.setDeckUnits(cards);
+		dto.getDeckArea().setDeckUnits(dto.getCards());
 	}
 
 }

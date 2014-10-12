@@ -5,7 +5,7 @@ import info.skullware.dotsummoner.common.scene.KeyListenScene;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.common.util.PixelMplus.FontWeight;
 import info.skullware.dotsummoner.common.util.ResourceUtil;
-import info.skullware.dotsummoner.scene.battle.BattleScene;
+import info.skullware.dotsummoner.scene.battle.LoadingScene;
 
 import org.andengine.entity.modifier.DelayModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -73,7 +73,7 @@ public class MainMenuButton {
 		case BUTTON_STORY:
 			// リソースの解放
 			ResourceUtil.getInstance(activity).resetAllTexture();
-			KeyListenScene scene = new BattleScene(activity, 10);
+			KeyListenScene scene = new LoadingScene(activity, 10);
 			// MainSceneへ移動
 			activity.getEngine().setScene(scene);
 			// 遷移管理用配列に追加

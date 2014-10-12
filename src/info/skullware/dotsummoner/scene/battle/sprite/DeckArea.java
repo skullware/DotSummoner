@@ -1,7 +1,7 @@
 package info.skullware.dotsummoner.scene.battle.sprite;
 
 import info.skullware.dotsummoner.MainActivity;
-import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 
 import java.util.List;
 
@@ -18,14 +18,12 @@ public class DeckArea extends Rectangle {
 
 	private float fx;
 
-	public DeckArea(KeyListenScene scene) {
-		super(0, MainActivity.HEIGHT - HEIGHT, WIDTH, HEIGHT, scene.getBaseActivity()
+	public DeckArea(MultiSceneActivity activity) {
+		super(0, MainActivity.HEIGHT - HEIGHT, WIDTH, HEIGHT, activity
 				.getVertexBufferObjectManager());
 		this.setColor(org.andengine.util.color.Color.BLACK);
 		this.setAlpha(0.5f);
 		this.setZIndex(ZINDEX);
-		scene.attachChild(this);
-		scene.registerTouchArea(this);
 	}
 
 	/*
