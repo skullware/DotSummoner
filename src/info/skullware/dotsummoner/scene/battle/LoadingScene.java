@@ -1,7 +1,12 @@
 package info.skullware.dotsummoner.scene.battle;
 
+import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.common.thread.AsyncTaskLoader;
+import info.skullware.dotsummoner.common.thread.IAsyncCallback;
+import info.skullware.dotsummoner.common.util.Effects;
+import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.EnemyUnit;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
@@ -13,14 +18,20 @@ import info.skullware.dotsummoner.scene.quest.Quest;
 
 import java.util.List;
 
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
+import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.text.Text;
+import org.andengine.util.modifier.IModifier;
 
 import android.view.KeyEvent;
 
 public class LoadingScene extends KeyListenScene {
 
 	private int questId;
+	private Text loadText;
+	private AnimatedSprite loadSprite;
 
 	public LoadingScene(MultiSceneActivity baseActivity, int questId) {
 		super(baseActivity);
@@ -32,8 +43,35 @@ public class LoadingScene extends KeyListenScene {
 	public void init() {
 		final BattleSceneDto dto = new BattleSceneDto();
 
-		this.registerUpdateHandler(new TimerHandler(0.5f, false, new ITimerCallback() {
-			public void onTimePassed(TimerHandler pTimerHandler) {
+		loadText = PixelMplus.getTextRegular10(getBaseActivity(), "Now Loading ...", 0, 0);
+		loadText.setPosition(MainActivity.WIDTH - loadText.getWidth() - 10, MainActivity.HEIGHT
+				- loadText.getHeight() - 10);
+		Effects.flash(loadText, 1f);
+		this.attachChild(loadText);
+
+		loadSprite = getBaseActivity().getResourceUtil().getAnimatedSprite("battle/loading.png", 1,
+				6);
+		loadSprite.animate(100);
+		loadSprite.setPosition(loadText.getX() - loadSprite.getWidth() - 5, loadText.getY());
+		this.attachChild(loadSprite);
+
+		IAsyncCallback callback = new IAsyncCallback() {
+
+			@Override
+			public void workToDo() {
+
+				new DelayModifier(10, new IEntityModifierListener() {
+					@Override
+					public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
+						// TODO Auto-generated method stub
+					}
+
+					@Override
+					public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
+						// TODO Auto-generated method stub
+					}
+				});
+
 				// DB設定
 				DBAdapter adapter = new DBAdapter(getBaseActivity()).open();
 				// 背景読み込み
@@ -79,14 +117,22 @@ public class LoadingScene extends KeyListenScene {
 					enemy.setPosition(unit.getPosition());
 					dto.getEnemys().add(enemy);
 				}
-
-				finish(dto);
 			}
 
-		}));
+			@Override
+			public void onComplete() {
+				finish(dto);
+			}
+		};
+
+		// 非同期ロード
+		new AsyncTaskLoader().execute(callback);
 	}
 
 	private void finish(BattleSceneDto dto) {
+		// load開放
+		this.loadText.setVisible(false);
+		this.loadSprite.setVisible(false);
 		// リソースを開放せずに移動
 		KeyListenScene scene = new BattleScene(getBaseActivity(), dto);
 		// MainSceneへ移動
