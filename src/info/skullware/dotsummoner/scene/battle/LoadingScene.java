@@ -10,6 +10,8 @@ import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.EnemyUnit;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
+import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
+import info.skullware.dotsummoner.scene.battle.dto.EffectDto;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
@@ -18,12 +20,8 @@ import info.skullware.dotsummoner.scene.quest.Quest;
 
 import java.util.List;
 
-import org.andengine.entity.IEntity;
-import org.andengine.entity.modifier.DelayModifier;
-import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.text.Text;
-import org.andengine.util.modifier.IModifier;
 
 import android.view.KeyEvent;
 
@@ -52,25 +50,13 @@ public class LoadingScene extends KeyListenScene {
 		loadSprite = getBaseActivity().getResourceUtil().getAnimatedSprite("battle/loading.png", 1,
 				6);
 		loadSprite.animate(100);
-		loadSprite.setPosition(loadText.getX() - loadSprite.getWidth() - 5, loadText.getY());
+		loadSprite.setPosition(loadText.getX() - loadSprite.getWidth() - 10, loadText.getY());
 		this.attachChild(loadSprite);
 
 		IAsyncCallback callback = new IAsyncCallback() {
 
 			@Override
 			public void workToDo() {
-
-				new DelayModifier(10, new IEntityModifierListener() {
-					@Override
-					public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
-						// TODO Auto-generated method stub
-					}
-				});
 
 				// DB設定
 				DBAdapter adapter = new DBAdapter(getBaseActivity()).open();
@@ -117,6 +103,11 @@ public class LoadingScene extends KeyListenScene {
 					enemy.setPosition(unit.getPosition());
 					dto.getEnemys().add(enemy);
 				}
+				// エフェクト
+				dto.setEffect(new EffectDto());
+				dto.getEffect().setSummonEnemy(
+						getBaseActivity().getResourceUtil().getAnimatedSprite(
+								"battle/effect/summonEnemy.png", 3, 1));
 			}
 
 			@Override

@@ -4,7 +4,7 @@ import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.scene.battle.BattleScene;
-import info.skullware.dotsummoner.scene.battle.BattleSceneDto;
+import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
 import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
@@ -12,6 +12,10 @@ import info.skullware.dotsummoner.scene.battle.sprite.CardSprite.States;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.modifier.FadeInModifier;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.text.Text;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
@@ -32,7 +36,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	}
 
 	@Override
-	public void init(BattleScene scene) {
+	public void init(final BattleScene scene) {
 		// 背景
 		scene.attachChild(dto.getBackground());
 		// カード
@@ -53,6 +57,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				10);
 		cost.setX(MainActivity.WIDTH - cost.getWidth() - 10);
 		scene.attachChild(cost);
+
 		// フィールド生成
 		for (FieldSprite field : dto.getPlayerFields()) {
 			scene.attachChild(field);
@@ -60,14 +65,35 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 		for (FieldSprite field : dto.getEnemyFields()) {
 			scene.attachChild(field);
 		}
-		// Enemy設定
-		for (UnitSprite enemy : dto.getEnemys()) {
-			FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
-			field.attachChild(enemy);
-			enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2, 40 - enemy.getHeight());
-			enemy.setZIndex(field.getZIndex() + 1);
-		}
-		scene.sortChildren();
+
+		scene.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
+
+			@Override
+			public void onTimePassed(TimerHandler arg0) {
+				// エフェクト
+				AnimatedSprite summonEffect = dto.getEffect().getSummonEnemy();
+				summonEffect.setVisible(false);
+				scene.attachChild(summonEffect);
+
+				// Enemy設定
+				for (UnitSprite enemy : dto.getEnemys()) {
+					FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
+
+					summonEffect.setPosition(field.getX() + 7, field.getY() - 20);
+					summonEffect.setVisible(true);
+					summonEffect.animate(new long[] { 100, 100, 100 }, 0, 2, false);
+					summonEffect.setVisible(false);
+
+					field.attachChild(enemy);
+					enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2,
+							40 - enemy.getHeight());
+					enemy.setZIndex(field.getZIndex() + 1);
+					enemy.registerEntityModifier(new FadeInModifier(1f));
+				}
+				scene.sortChildren();
+			}
+			
+		}));
 	}
 
 	/**

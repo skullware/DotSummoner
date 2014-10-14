@@ -1,4 +1,4 @@
-package info.skullware.dotsummoner.scene.battle;
+package info.skullware.dotsummoner.scene.battle.dto;
 
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
@@ -12,17 +12,20 @@ import java.util.List;
 import org.andengine.entity.sprite.Sprite;
 
 public class BattleSceneDto {
-	
+
 	// スプライト
 	private Sprite background;
 	private List<CardSprite> cards = new ArrayList<CardSprite>();
 	private List<FieldSprite> playerFields = new ArrayList<FieldSprite>();
 	private List<FieldSprite> enemyFields = new ArrayList<FieldSprite>();
 	private List<UnitSprite> enemys = new ArrayList<UnitSprite>();
-	
+
+	// エフェクト
+	private EffectDto effect;
+
 	// デック
 	private DeckArea deckArea;
-	
+
 	// クエスト
 	private Quest quest;
 
@@ -80,5 +83,13 @@ public class BattleSceneDto {
 
 	public void setQuest(Quest quest) {
 		this.quest = quest;
+	}
+
+	public EffectDto getEffect() {
+		return effect;
+	}
+
+	public void setEffect(EffectDto effect) {
+		this.effect = effect;
 	}
 }

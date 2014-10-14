@@ -2,6 +2,7 @@ package info.skullware.dotsummoner.scene.battle;
 
 import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
+import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.NextPhaseListener;
 import info.skullware.dotsummoner.scene.battle.phase.AbstractPhase;
 import info.skullware.dotsummoner.scene.battle.phase.InitCallPhase;
