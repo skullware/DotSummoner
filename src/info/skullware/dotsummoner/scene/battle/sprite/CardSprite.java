@@ -4,7 +4,6 @@ import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
-import info.skullware.dotsummoner.common.util.PixelMplus.FontWeight;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
 import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
@@ -122,14 +121,12 @@ public class CardSprite extends Sprite {
 	}
 
 	public void setText(MultiSceneActivity activity) {
-		Text cost = PixelMplus.getStrokeTextRegular12(activity, String.valueOf(unitData.getCost()),
-				7, 5);
-		Text level = PixelMplus.getStrokeTextRegular12(activity,
+		Text cost = PixelMplus.getStrokeTextRegular10B(activity, String.valueOf(unitData.getCost()),
+				7, 3);
+		Text level = PixelMplus.getStrokeTextRegular10B(activity,
 				String.valueOf(unitData.getLevel()), 48, 64);
-//		PixelMplus.setDefaultColor(cost);
-//		PixelMplus.setDefaultColor(level);
 		level.setPosition(this.getWidth() - level.getWidth() - 7,
-				this.getHeight() - level.getHeight() - 5);
+				this.getHeight() - level.getHeight() - 3);
 		this.attachChild(cost);
 		this.attachChild(level);
 	}

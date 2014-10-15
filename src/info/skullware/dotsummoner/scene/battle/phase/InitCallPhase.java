@@ -14,13 +14,19 @@ import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.FadeInModifier;
+import org.andengine.entity.modifier.FadeOutModifier;
+import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.util.modifier.IModifier;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
 	private BattleSceneDto dto;
+	AnimatedSprite effect;
 
 	public InitCallPhase(BattleSceneDto dto) {
 		this.dto = dto;
@@ -66,34 +72,50 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			scene.attachChild(field);
 		}
 
-		scene.registerUpdateHandler(new TimerHandler(2f, new ITimerCallback() {
+		effect = dto.getEffect().getSummonEnemy();
+		effect.setAlpha(0f);
+		scene.attachChild(effect);
 
+		scene.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler arg0) {
-				// エフェクト
-				AnimatedSprite summonEffect = dto.getEffect().getSummonEnemy();
-				summonEffect.setVisible(false);
-				scene.attachChild(summonEffect);
-
-				// Enemy設定
-				for (UnitSprite enemy : dto.getEnemys()) {
-					FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
-
-					summonEffect.setPosition(field.getX() + 7, field.getY() - 20);
-					summonEffect.setVisible(true);
-					summonEffect.animate(new long[] { 100, 100, 100 }, 0, 2, false);
-					summonEffect.setVisible(false);
-
-					field.attachChild(enemy);
-					enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2,
-							40 - enemy.getHeight());
-					enemy.setZIndex(field.getZIndex() + 1);
-					enemy.registerEntityModifier(new FadeInModifier(1f));
-				}
-				scene.sortChildren();
+				summonEnemyEvent(scene, 0);
 			}
-			
 		}));
+	}
+
+	private void summonEnemyEvent(final Scene scene, final int index) {
+		if (index >= dto.getEnemys().size()) {
+			scene.sortChildren();
+		} else {
+			// Enemy設定
+			UnitSprite enemy = dto.getEnemys().get(index);
+			FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
+
+			enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2, 40 - enemy.getHeight());
+			enemy.setZIndex(field.getZIndex() + 1);
+			enemy.registerEntityModifier(new FadeInModifier(2f, new IEntityModifierListener() {
+
+				@Override
+				public void onModifierStarted(IModifier<IEntity> arg0, IEntity arg1) {
+				}
+
+				@Override
+				public void onModifierFinished(IModifier<IEntity> arg0, IEntity arg1) {
+					summonEnemyEvent(scene, index + 1);
+				}
+			}));
+			field.attachChild(enemy);
+
+			// エフェクト
+			effect.setAlpha(1f);
+			effect.registerEntityModifier(new FadeOutModifier(0.6f));
+			effect.setZIndex(enemy.getZIndex() + 1);
+			effect.setPosition(field.getX() + 7, field.getY() - 20);
+			effect.animate(new long[] { 200, 200, 200 }, 0, 2, false);
+
+			scene.sortChildren();
+		}
 	}
 
 	/**
