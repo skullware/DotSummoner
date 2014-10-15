@@ -26,7 +26,6 @@ import org.andengine.util.modifier.IModifier;
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
 	private BattleSceneDto dto;
-	AnimatedSprite effect;
 
 	public InitCallPhase(BattleSceneDto dto) {
 		this.dto = dto;
@@ -72,10 +71,6 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			scene.attachChild(field);
 		}
 
-		effect = dto.getEffect().getSummonEnemy();
-		effect.setAlpha(0f);
-		scene.attachChild(effect);
-
 		scene.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler arg0) {
@@ -106,14 +101,6 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				}
 			}));
 			field.attachChild(enemy);
-
-			// エフェクト
-			effect.setAlpha(1f);
-			effect.registerEntityModifier(new FadeOutModifier(0.6f));
-			effect.setZIndex(enemy.getZIndex() + 1);
-			effect.setPosition(field.getX() + 7, field.getY() - 20);
-			effect.animate(new long[] { 200, 200, 200 }, 0, 2, false);
-
 			scene.sortChildren();
 		}
 	}
