@@ -4,6 +4,7 @@ import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 import info.skullware.dotsummoner.common.scene.KeyListenScene;
 import info.skullware.dotsummoner.scene.title.TitleScene;
 
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
@@ -38,7 +39,11 @@ public class MainActivity extends MultiSceneActivity implements SensorEventListe
 				new RatioResolutionPolicy(WIDTH, HEIGHT),
 				// 描画範囲
 				camera);
-
+		// オーディオ許可
+		eo.getAudioOptions().setNeedsSound(true);
+		eo.getAudioOptions().setNeedsMusic(true);
+		SoundFactory.setAssetBasePath("mfx/");
+		
 		return eo;
 	}
 

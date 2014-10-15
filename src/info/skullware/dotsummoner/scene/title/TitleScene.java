@@ -7,6 +7,8 @@ import info.skullware.dotsummoner.common.util.PixelMplus.FontWeight;
 import info.skullware.dotsummoner.common.util.ResourceUtil;
 import info.skullware.dotsummoner.scene.menu.MainMenuScene;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -24,6 +26,7 @@ import android.view.KeyEvent;
 public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickListener {
 
 	private static final int BUTTON_START = 1;
+	private Music bgm;
 
 	/**
 	 * コンストラクタ
@@ -36,8 +39,8 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 	@Override
 	public void init() {
 		// 背景ボタンを追加
-		ButtonSprite btnStart = getBaseActivity().getResourceUtil().getButtonSprite("title/background.png",
-				"title/background.png");
+		ButtonSprite btnStart = getBaseActivity().getResourceUtil().getButtonSprite(
+				"title/background.png", "title/background.png");
 		btnStart.setTag(BUTTON_START);
 		btnStart.setOnClickListener(this);
 		attachChild(btnStart);
@@ -47,15 +50,18 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 		Sprite logo = getBaseActivity().getResourceUtil().getSprite("title/logo.png");
 		logo.setPosition(160, 40);
 		this.attachChild(logo);
-		logo.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(new MoveModifier(3, logo.getX(),
-				logo.getX(), logo.getY(), logo.getY() + 10), new MoveModifier(3, logo.getX(), logo.getX(),
-				logo.getY() + 10, logo.getY()))));
+		logo.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(
+				new MoveModifier(3, logo.getX(), logo.getX(), logo.getY(), logo.getY() + 10),
+				new MoveModifier(3, logo.getX(), logo.getX(), logo.getY() + 10, logo.getY()))));
 
 		// Font
-		Text text = PixelMplus.getTextPmp(getBaseActivity(), "Touch Screen !", 350, 260, 48, FontWeight.BOLD12, Color.BLACK);
-		text.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(new AlphaModifier(2.0f, 1, 0),
-				new AlphaModifier(2.0f, 0, 1))));
+		Text text = PixelMplus.getTextPmp(getBaseActivity(), "Touch Screen !", 350, 260, 48,
+				FontWeight.BOLD12, Color.BLACK);
+		text.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(
+				new AlphaModifier(2.0f, 1, 0), new AlphaModifier(2.0f, 0, 1))));
 		attachChild(text);
+		
+		bgm.play();
 	}
 
 	/*
@@ -83,6 +89,14 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 
 	@Override
 	public void prepareSoundAndMusic() {
+		try {
+			MusicFactory.setAssetBasePath("mfx/");
+			bgm = MusicFactory.createMusicFromAsset(getBaseActivity().getMusicManager(),
+					getBaseActivity(), "title/title.wav");
+			bgm.setLooping(true);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
