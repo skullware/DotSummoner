@@ -5,6 +5,7 @@ import info.skullware.dotsummoner.common.scene.KeyListenScene;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.common.util.ResourceUtil;
 
+import org.andengine.audio.music.Music;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.FadeInModifier;
 import org.andengine.entity.primitive.Rectangle;
@@ -22,6 +23,7 @@ import android.view.KeyEvent;
 public class MainMenuScene extends KeyListenScene implements OnClickListener {
 
 	private static final int BUTTON_START = 1;
+	private Music bgm;
 
 	public MainMenuScene(MultiSceneActivity baseActivity) {
 		super(baseActivity);
@@ -61,6 +63,7 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 	public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 		switch (pButtonSprite.getTag()) {
 		case BUTTON_START:
+			bgm.stop();
 			// リソースの解放
 			ResourceUtil.getInstance(getBaseActivity()).resetAllTexture();
 			KeyListenScene scene = new MainMenuScene(getBaseActivity());
@@ -77,8 +80,9 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 
 	@Override
 	public void prepareSoundAndMusic() {
-		// TODO 自動生成されたメソッド・スタブ
-
+		bgm = getBaseActivity().getResourceUtil().getMusic("menu/menu.wav");
+		bgm.setLooping(true);
+		bgm.play();
 	}
 
 	@Override

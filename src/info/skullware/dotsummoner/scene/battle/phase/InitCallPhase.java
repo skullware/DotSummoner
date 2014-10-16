@@ -12,20 +12,22 @@ import info.skullware.dotsummoner.scene.battle.sprite.CardSprite.States;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.sound.Sound;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.FadeInModifier;
-import org.andengine.entity.modifier.FadeOutModifier;
 import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.util.modifier.IModifier;
 
 public class InitCallPhase extends AbstractPhase implements UnitPositionListener, CollisionListener {
 
 	private BattleSceneDto dto;
+	private Music bgm;
+	private Sound onEnemySound;
 
 	public InitCallPhase(BattleSceneDto dto) {
 		this.dto = dto;
@@ -37,6 +39,7 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 
 	@Override
 	public void finish() {
+		bgm.stop();
 		this.nextPhaseListener.nextPhase(this);
 	}
 
@@ -71,15 +74,22 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 			scene.attachChild(field);
 		}
 
+		// サウンド
+		onEnemySound = scene.getBaseActivity().getResourceUtil().getSound("battle/onEnemy.wav");
+		// BGM
+		bgm = scene.getBaseActivity().getResourceUtil().getMusic("battle/initcall.wav");
+		bgm.setLooping(true);
+		bgm.play();
+
 		scene.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler arg0) {
-				summonEnemyEvent(scene, 0);
+				onEnemyEvent(scene, 0);
 			}
 		}));
 	}
 
-	private void summonEnemyEvent(final Scene scene, final int index) {
+	private void onEnemyEvent(final Scene scene, final int index) {
 		if (index >= dto.getEnemys().size()) {
 			scene.sortChildren();
 		} else {
@@ -97,10 +107,12 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 
 				@Override
 				public void onModifierFinished(IModifier<IEntity> arg0, IEntity arg1) {
-					summonEnemyEvent(scene, index + 1);
+					onEnemyEvent(scene, index + 1);
 				}
 			}));
 			field.attachChild(enemy);
+			onEnemySound.play();
+
 			scene.sortChildren();
 		}
 	}
@@ -110,10 +122,6 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	 */
 	@Override
 	public void onCollisionAtFieldWithDown(CardSprite card) {
-		// // フィールドの可視化
-		// for (FieldSprite fieldSprite : playerFields) {
-		// fieldSprite.setVisible(true);
-		// }
 	}
 
 	/**
@@ -155,10 +163,6 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 				return true;
 			}
 		}
-		// // タイル不可視
-		// for (FieldSprite fieldSprite : playerFields) {
-		// fieldSprite.setVisible(false);
-		// }
 		return false;
 	}
 

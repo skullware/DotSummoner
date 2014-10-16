@@ -6,6 +6,10 @@ import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -47,6 +51,9 @@ public class ResourceUtil {
 
 			textureRegionPool = new HashMap<String, ITextureRegion>();
 			tiledTextureRegionPool = new HashMap<String, TiledTextureRegion>();
+
+			MusicFactory.setAssetBasePath("mfx/");
+			SoundFactory.setAssetBasePath("mfx/");
 		}
 		return self;
 	}
@@ -55,7 +62,8 @@ public class ResourceUtil {
 	public Sprite getSprite(String fileName) {
 		// 同名のファイルからITextureRegionが生成済みであれば再利用
 		if (textureRegionPool.containsKey(fileName)) {
-			Sprite s = new Sprite(0, 0, textureRegionPool.get(fileName), gameActivity.getVertexBufferObjectManager());
+			Sprite s = new Sprite(0, 0, textureRegionPool.get(fileName),
+					gameActivity.getVertexBufferObjectManager());
 			s.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 			return s;
 		}
@@ -73,7 +81,8 @@ public class ResourceUtil {
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		gameActivity.getEngine().getTextureManager().loadTexture(bta);
 
-		ITextureRegion btr = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta, gameActivity, fileName, 0, 0);
+		ITextureRegion btr = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta,
+				gameActivity, fileName, 0, 0);
 		Sprite s = new Sprite(0, 0, btr, gameActivity.getVertexBufferObjectManager());
 		s.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -104,10 +113,11 @@ public class ResourceUtil {
 		gameActivity.getTextureManager().loadTexture(bta);
 
 		// TiledTextureRegion（タイル状のTextureRegion）を生成。マス数を与え、同じサイズのTextureRegionを用意
-		TiledTextureRegion ttr = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bta, gameActivity,
-				fileName, 0, 0, column, row);
+		TiledTextureRegion ttr = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bta,
+				gameActivity, fileName, 0, 0, column, row);
 		// AnimatedSpriteを生成
-		AnimatedSprite s = new AnimatedSprite(0, 0, ttr, gameActivity.getVertexBufferObjectManager());
+		AnimatedSprite s = new AnimatedSprite(0, 0, ttr,
+				gameActivity.getVertexBufferObjectManager());
 		s.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		tiledTextureRegionPool.put(fileName, ttr);
@@ -119,8 +129,8 @@ public class ResourceUtil {
 	public ButtonSprite getButtonSprite(String normal, String pressed) {
 
 		if (textureRegionPool.containsKey(normal) && textureRegionPool.containsKey(pressed)) {
-			ButtonSprite s = new ButtonSprite(0, 0, textureRegionPool.get(normal), textureRegionPool.get(pressed),
-					gameActivity.getVertexBufferObjectManager());
+			ButtonSprite s = new ButtonSprite(0, 0, textureRegionPool.get(normal),
+					textureRegionPool.get(pressed), gameActivity.getVertexBufferObjectManager());
 			s.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 			return s;
 		}
@@ -134,13 +144,17 @@ public class ResourceUtil {
 		Bitmap bm = BitmapFactory.decodeStream(is);
 
 		// ボタン生成の為のTextureRegion生成。TiledTextureRegionでなく、BuildableBitmapTextureAtlasを利用する。
-		BuildableBitmapTextureAtlas bta = new BuildableBitmapTextureAtlas(gameActivity.getTextureManager(),
-				getTwoPowerSize(bm.getWidth() * 2), getTwoPowerSize(bm.getHeight()));
-		ITextureRegion trNormal = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta, gameActivity, normal);
-		ITextureRegion trPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta, gameActivity, pressed);
+		BuildableBitmapTextureAtlas bta = new BuildableBitmapTextureAtlas(
+				gameActivity.getTextureManager(), getTwoPowerSize(bm.getWidth() * 2),
+				getTwoPowerSize(bm.getHeight()));
+		ITextureRegion trNormal = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta,
+				gameActivity, normal);
+		ITextureRegion trPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bta,
+				gameActivity, pressed);
 
 		try {
-			bta.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 0, 0));
+			bta.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(
+					0, 0, 0));
 			bta.load();
 		} catch (TextureAtlasBuilderException e) {
 			Debug.e(e);
@@ -149,7 +163,8 @@ public class ResourceUtil {
 		textureRegionPool.put(normal, trNormal);
 		textureRegionPool.put(pressed, trPressed);
 
-		ButtonSprite s = new ButtonSprite(0, 0, trNormal, trPressed, gameActivity.getVertexBufferObjectManager());
+		ButtonSprite s = new ButtonSprite(0, 0, trNormal, trPressed,
+				gameActivity.getVertexBufferObjectManager());
 		s.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		return s;
 	}
@@ -169,5 +184,25 @@ public class ResourceUtil {
 		while (pow2value < value)
 			pow2value *= 2;
 		return pow2value;
+	}
+
+	public Music getMusic(String fileName) {
+		try {
+			return MusicFactory.createMusicFromAsset(gameActivity.getMusicManager(), gameActivity,
+					fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Sound getSound(String fileName) {
+		try {
+			return SoundFactory.createSoundFromAsset(gameActivity.getSoundManager(), gameActivity,
+					fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -8,7 +8,6 @@ import info.skullware.dotsummoner.common.util.ResourceUtil;
 import info.skullware.dotsummoner.scene.menu.MainMenuScene;
 
 import org.andengine.audio.music.Music;
-import org.andengine.audio.music.MusicFactory;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -60,8 +59,6 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 		text.registerEntityModifier(new LoopEntityModifier(new SequenceEntityModifier(
 				new AlphaModifier(2.0f, 1, 0), new AlphaModifier(2.0f, 0, 1))));
 		attachChild(text);
-		
-		bgm.play();
 	}
 
 	/*
@@ -75,6 +72,7 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 	public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 		switch (pButtonSprite.getTag()) {
 		case BUTTON_START:
+			bgm.stop();
 			// リソースの解放
 			ResourceUtil.getInstance(getBaseActivity()).resetAllTexture();
 			KeyListenScene scene = new MainMenuScene(getBaseActivity());
@@ -89,14 +87,9 @@ public class TitleScene extends KeyListenScene implements ButtonSprite.OnClickLi
 
 	@Override
 	public void prepareSoundAndMusic() {
-		try {
-			MusicFactory.setAssetBasePath("mfx/");
-			bgm = MusicFactory.createMusicFromAsset(getBaseActivity().getMusicManager(),
-					getBaseActivity(), "title/title.wav");
-			bgm.setLooping(true);			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		bgm = getBaseActivity().getResourceUtil().getMusic("title/title.wav");
+		bgm.setLooping(true);
+		bgm.play();
 	}
 
 	@Override
