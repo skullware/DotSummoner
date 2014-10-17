@@ -19,7 +19,7 @@ import android.graphics.Color;
 
 public class MainMenuButton {
 
-	private static final int BUTTON_STORY = 1001;
+	private static final int BUTTON_QUEST = 1001;
 	private static final int BUTTON_PARTY = 1002;
 	private static final int BUTTON_BARCODE = 1003;
 	private static final int BUTTON_OPTION = 1004;
@@ -34,7 +34,7 @@ public class MainMenuButton {
 		ButtonSprite btnStory = activity.getResourceUtil().getButtonSprite("button/story.png",
 				"button/story_s.png");
 		btnStory.setPosition(650, 30);
-		btnStory.setTag(BUTTON_STORY);
+		btnStory.setTag(BUTTON_QUEST);
 		btnStory.setOnClickListener(listener);
 		scene.attachChild(btnStory);
 		scene.registerTouchArea(btnStory);
@@ -70,7 +70,7 @@ public class MainMenuButton {
 
 	public static void onClick(int tag, MultiSceneActivity activity) {
 		switch (tag) {
-		case BUTTON_STORY:
+		case BUTTON_QUEST:
 			// リソースの解放
 			ResourceUtil.getInstance(activity).resetAllTexture();
 			KeyListenScene scene = new LoadingScene(activity, 10);
