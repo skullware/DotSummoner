@@ -6,7 +6,6 @@ import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
-import info.skullware.dotsummoner.scene.battle.listener.UnitPositionListener;
 
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -49,11 +48,6 @@ public class CardSprite extends Sprite {
 	private PlayerUnit unitData;
 
 	/**
-	 * ユニット位置変化リスナ
-	 */
-	private UnitPositionListener unitPositionListener;
-
-	/**
 	 * コンストラクタ
 	 * 
 	 * @param sprite
@@ -93,15 +87,10 @@ public class CardSprite extends Sprite {
 		return true;
 	}
 
-	public void onFieldUnitSprite(CardSprite unit) {
-		unitPositionListener.onFieldUnitSprite(unit);
-	}
-
 	/**
 	 * リスナーを削除する
 	 */
 	public void removeListener() {
-		this.unitPositionListener = null;
 		this.collisionListener = null;
 	}
 
@@ -133,21 +122,14 @@ public class CardSprite extends Sprite {
 		this.unitData = unitData;
 	}
 
-	/**
-	 * リスナーを追加する
-	 * 
-	 * @param listener
+	/*
+	 * ユニット配置イベント
 	 */
-	public void setUnitPositionListener(UnitPositionListener listener) {
-		this.unitPositionListener = listener;
-	}
-
 	private void onDeckAreaTouched(final TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
 			fx = this.getX();
 			fy = this.getY();
 			this.registerEntityModifier(flashModifier);
-			this.collisionListener.onCollisionAtFieldWithDown(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
 			this.collisionListener.onCollisionAtFieldWithMove(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
@@ -162,32 +144,35 @@ public class CardSprite extends Sprite {
 			return;
 		}
 		// 移動
-		this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY()
-				- this.getHeight() / 2 - (MainActivity.HEIGHT - DeckArea.HEIGHT));
+//		this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY()
+//				- this.getHeight() / 2 - (MainActivity.HEIGHT - DeckArea.HEIGHT));
+		this.setPosition(pSceneTouchEvent.getX() - this.getParent().getX() - this.getWidth() / 2,
+				pSceneTouchEvent.getY() - this.getParent().getY() - this.getHeight() / 2);
 	}
 
+	/*
+	 * ユニット再配置イベント
+	 */
 	private void onReDragAndDropUnit(final TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-			float[] position = convertSceneToLocalCoordinates(this.getX(), this.getY());
-			fx = position[0];
-			fy = position[1];
+			fx = this.getX();
+			fy = this.getY();
 			this.registerEntityModifier(flashModifier);
-			this.collisionListener.onCollisionAtFieldWithDown(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
-			this.collisionListener.onCollisionAtFieldWithMove(this);
+			this.collisionListener.onCollisionAtDeckWithMove(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-			if (!this.collisionListener.onCollisionAtFieldWithUp(this)) {
+			if (!this.collisionListener.onCollisionAtDeckWithUp(this)) {
 				// 移動キャンセル
 				this.registerEntityModifier(new MoveModifier(0.5f, pSceneTouchEvent.getX()
-						- this.getWidth() / 2, fx, pSceneTouchEvent.getY() - this.getHeight() / 2
-						- (MainActivity.HEIGHT - DeckArea.HEIGHT), fy));
+						- this.getParent().getX() - this.getWidth() / 2, fx, pSceneTouchEvent
+						.getY() - this.getParent().getY() - this.getHeight() / 2, fy));
 			}
 			this.setAlpha(1);
 			this.unregisterEntityModifier(flashModifier);
 			return;
 		}
 		// 移動
-		this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY()
-				- this.getHeight() / 2 - (MainActivity.HEIGHT - DeckArea.HEIGHT));
+		this.setPosition(pSceneTouchEvent.getX() - this.getParent().getX() - this.getWidth() / 2,
+				pSceneTouchEvent.getY() - this.getParent().getY() - this.getHeight() / 2);
 	}
 }

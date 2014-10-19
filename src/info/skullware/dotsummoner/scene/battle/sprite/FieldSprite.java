@@ -8,21 +8,29 @@ import org.andengine.entity.sprite.Sprite;
 
 public class FieldSprite extends Sprite {
 
+	private boolean isFlash;
 	private IEntityModifier flashModifier = Effects.getFlashModifier(0.5f);
 	private Unit unitData;
 
 	public FieldSprite(Sprite sprite) {
 		super(sprite.getX(), sprite.getY(), sprite.getTextureRegion(), sprite
 				.getVertexBufferObjectManager());
+		this.isFlash = false;
 	}
 
 	public void clear() {
-		this.unregisterEntityModifier(flashModifier);
-		this.setAlpha(1f);
+		if (isFlash) {
+			this.unregisterEntityModifier(flashModifier);
+			this.isFlash = false;
+			this.setAlpha(0.8f);
+		}
 	}
 
 	public void flash() {
-		this.registerEntityModifier(flashModifier);
+		if (!isFlash) {
+			this.registerEntityModifier(flashModifier);
+			this.isFlash = true;
+		}
 	}
 
 	public Unit getUnitData() {

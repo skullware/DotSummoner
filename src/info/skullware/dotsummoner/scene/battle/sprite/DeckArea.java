@@ -14,7 +14,7 @@ public class DeckArea extends Rectangle {
 
 	public static int HEIGHT = 128;
 	public static int WIDTH = 800;
-	public static int ZINDEX = 2;
+	public static int ZINDEX = 50;
 
 	private float fx;
 

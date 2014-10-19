@@ -20,15 +20,14 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 	public BattleScene(MultiSceneActivity baseActivity, BattleSceneDto dto) {
 		super(baseActivity);
 		this.dto = dto;
-		init(dto.getQuest().getQuestId());
+		init();
 	}
 
 	/*
 	 * 初期処理
-	 * 
-	 * @see info.skullware.dotsummoner.common.KeyListenScene#init()
 	 */
-	public void init(int questId) {
+	@Override
+	public void init() {
 		// 初回召喚フェイズ
 		InitCallPhase initCall = new InitCallPhase(dto);
 		initCall.setNextPhaseListener(this);
@@ -61,11 +60,4 @@ public class BattleScene extends KeyListenScene implements OnClickListener, Next
 		// TODO 自動生成されたメソッド・スタブ
 		return false;
 	}
-
-	@Override
-	public void init() {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
 }

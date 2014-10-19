@@ -12,13 +12,9 @@ import java.util.EventListener;
  */
 public interface CollisionListener extends EventListener {
 
-	public void onCollisionAtFieldWithDown(CardSprite unit);
-
 	public boolean onCollisionAtFieldWithUp(CardSprite unit);
 
 	public void onCollisionAtFieldWithMove(CardSprite unit);
-	
-	public void onCollisionAtDeckWithDown(CardSprite unit);
 	
 	public boolean onCollisionAtDeckWithUp(CardSprite unit);
 	
