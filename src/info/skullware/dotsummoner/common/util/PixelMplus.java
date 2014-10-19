@@ -38,7 +38,7 @@ public class PixelMplus {
 		return getStrokeText(activity, text, pX, pY, 28, FontWeight.REGULAR10, Color.WHITE,
 				Color.BLACK);
 	}
-	public static Text getStrokeTextRegular10B(MultiSceneActivity activity, String text, float pX,
+	public static Text getStrokeTextBold10(MultiSceneActivity activity, String text, float pX,
 			float pY) {
 		return getStrokeText(activity, text, pX, pY, 28, FontWeight.BOLD10, Color.WHITE,
 				Color.BLACK);

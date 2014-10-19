@@ -107,9 +107,9 @@ public class CardSprite extends Sprite {
 	}
 
 	public void setText(MultiSceneActivity activity) {
-		Text cost = PixelMplus.getStrokeTextRegular10B(activity,
+		Text cost = PixelMplus.getStrokeTextBold10(activity,
 				String.valueOf(unitData.getCost()), 7, 3);
-		Text level = PixelMplus.getStrokeTextRegular10B(activity,
+		Text level = PixelMplus.getStrokeTextBold10(activity,
 				String.valueOf(unitData.getLevel()), 48, 64);
 		level.setPosition(this.getWidth() - level.getWidth() - 7,
 				this.getHeight() - level.getHeight() - 3);
