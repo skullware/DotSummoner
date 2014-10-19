@@ -1,7 +1,6 @@
 package info.skullware.dotsummoner.scene.battle.phase;
 
 import info.skullware.dotsummoner.MainActivity;
-import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.scene.battle.BattleScene;
 import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
@@ -92,12 +91,20 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	private void onEnemyEvent(final Scene scene, final int index) {
 		if (index >= dto.getEnemys().size()) {
 			scene.sortChildren();
+			scene.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
+				@Override
+				public void onTimePassed(TimerHandler arg0) {
+					onSummonEvent(scene, 0);
+				}
+			}));
 		} else {
 			// Enemy設定
 			UnitSprite enemy = dto.getEnemys().get(index);
 			FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
 
-			enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2, 40 - enemy.getHeight());
+			enemy.setPosition(field.getWidth() / 2 - (enemy.getWidth() * 1.5f) / 2,
+					40 - (enemy.getHeight() * 1.5f));
+			enemy.setScale(1.5f);
 			enemy.setZIndex(field.getZIndex() + 1);
 			enemy.registerEntityModifier(new FadeInModifier(2f, new IEntityModifierListener() {
 
@@ -117,6 +124,10 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 		}
 	}
 
+	private void onSummonEvent(final Scene scene, final int index) {
+
+	}
+
 	/**
 	 * フィールド衝突判定（ユニットドラッグ）
 	 */
@@ -134,11 +145,10 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 		for (FieldSprite field : dto.getPlayerFields()) {
 			if (card.collidesWith(field) && !isCollision) {
 				// フィールドの点滅
-				Effects.flash(field, 0.3f);
+				field.flash();
 				isCollision = true;
 			} else {
-				field.clearEntityModifiers();
-				field.setAlpha(0.8f);
+				field.clear();
 			}
 		}
 	}
@@ -150,16 +160,21 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	public boolean onCollisionAtFieldWithUp(CardSprite card) {
 		// フィールドとの衝突判定
 		for (FieldSprite field : dto.getPlayerFields()) {
-			if (card.collidesWith(field) && !field.isUse()) {
-				// フィールドに貼り付けO
-				card.setState(States.PRE_FIELD);
-				card.onFieldUnitSprite(card);
+			if (card.collidesWith(field) && field.getUnitData() == null) {
+				// フィールドに貼り付け
+				// card.onFieldUnitSprite(card);
+				card.detachSelf();
+				
 				field.attachChild(card);
+				card.setState(States.FIELD_AREA);
 				card.setPosition(field.getWidth() / 2 - card.getWidth() / 2, 40 - card.getHeight());
 				card.setZIndex(field.getZIndex() + 1);
 				card.setRotation(10f);
-				field.setUse(true);
-				field.clearEntityModifiers();
+				field.setUnitData(card.getUnitData());
+				field.clear();
+				
+				// デックエリア再設定
+				dto.getDeckArea().setDeckUnits(dto.getCards());
 				return true;
 			}
 		}
@@ -170,6 +185,32 @@ public class InitCallPhase extends AbstractPhase implements UnitPositionListener
 	public void onFieldUnitSprite(CardSprite card) {
 		// デックエリア再設定
 		dto.getDeckArea().setDeckUnits(dto.getCards());
+	}
+
+	@Override
+	public void onCollisionAtDeckWithDown(CardSprite unit) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public boolean onCollisionAtDeckWithUp(CardSprite card) {
+		// デックエリアとの衝突判定
+		if (card.collidesWith(dto.getDeckArea())) {
+			// フィールドに貼り付け
+			FieldSprite field = (FieldSprite) card.getParent();
+			field.detachChild(card);
+			// デックエリア再設定
+			dto.getDeckArea().setDeckUnits(dto.getCards());
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onCollisionAtDeckWithMove(CardSprite unit) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 }

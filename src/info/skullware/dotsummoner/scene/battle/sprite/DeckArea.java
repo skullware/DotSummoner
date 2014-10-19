@@ -69,6 +69,7 @@ public class DeckArea extends Rectangle {
 		for (CardSprite unitSprite : sprites) {
 			if (unitSprite.isStateDeck()) {
 				unitSprite.setZIndex(this.getZIndex() + 1);
+				unitSprite.setRotation(0f);
 				this.attachChild(unitSprite);
 			}
 		}

@@ -17,4 +17,10 @@ public interface CollisionListener extends EventListener {
 	public boolean onCollisionAtFieldWithUp(CardSprite unit);
 
 	public void onCollisionAtFieldWithMove(CardSprite unit);
+	
+	public void onCollisionAtDeckWithDown(CardSprite unit);
+	
+	public boolean onCollisionAtDeckWithUp(CardSprite unit);
+	
+	public void onCollisionAtDeckWithMove(CardSprite unit);
 }

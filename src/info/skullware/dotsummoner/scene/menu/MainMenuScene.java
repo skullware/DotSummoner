@@ -46,7 +46,7 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 
 		// girl
 		Sprite girl = getBaseActivity().getResourceUtil().getSprite("menu/f352.png");
-		this.placeToCenterX(girl, 60);
+		girl.setPosition(400, 60);
 		girl.registerEntityModifier(new FadeInModifier(5.0f));
 		this.attachChild(girl);
 
@@ -58,7 +58,7 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 		setButtons();
 
 		// メッセージエリア
-		Rectangle area = new Rectangle(10, 300, 780, 160, getBaseActivity()
+		Rectangle area = new Rectangle(10, 320, 780, 150, getBaseActivity()
 				.getVertexBufferObjectManager());
 		area.setColor(Color.BLACK);
 		area.registerEntityModifier(new AlphaModifier(3, 0, 0.5f));
@@ -66,8 +66,8 @@ public class MainMenuScene extends KeyListenScene implements OnClickListener {
 
 		// Font
 		String str = "テキスト表示てすと\n2段めのテキスト\nLinux Mint 17 xfc\n4段めのテキスト、入るかな？";
-		Text text = PixelMplus.getTextRegular12(getBaseActivity(), str, 20, 310);
-		attachChild(text);
+		Text text = PixelMplus.getTextRegular12(getBaseActivity(), str, 10, 10);
+		area.attachChild(text);
 	}
 
 	private void setButtons() {

@@ -11,7 +11,6 @@ import info.skullware.dotsummoner.database.DBAdapter;
 import info.skullware.dotsummoner.param.unit.EnemyUnit;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
-import info.skullware.dotsummoner.scene.battle.dto.EffectDto;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
@@ -103,11 +102,6 @@ public class LoadingScene extends KeyListenScene {
 					enemy.setPosition(unit.getPosition());
 					dto.getEnemys().add(enemy);
 				}
-				// エフェクト
-				dto.setEffect(new EffectDto());
-				dto.getEffect().setSummonEnemy(
-						getBaseActivity().getResourceUtil().getAnimatedSprite(
-								"battle/effect/summonEnemy.png", 3, 1));
 			}
 
 			@Override

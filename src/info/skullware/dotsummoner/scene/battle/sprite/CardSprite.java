@@ -17,12 +17,10 @@ import org.andengine.input.touch.TouchEvent;
 public class CardSprite extends Sprite {
 
 	public static enum States {
-		ACTIVE,
 		// デックエリア
 		DECK_AREA,
 		// フィールド
-		FIELD_AREA, // フィールド（未決定）
-		PRE_FIELD
+		FIELD_AREA
 	}
 
 	/**
@@ -85,7 +83,7 @@ public class CardSprite extends Sprite {
 		case DECK_AREA:
 			onDeckAreaTouched(touchEvent);
 			break;
-		case PRE_FIELD:
+		case FIELD_AREA:
 			onReDragAndDropUnit(touchEvent);
 			break;
 
@@ -121,8 +119,8 @@ public class CardSprite extends Sprite {
 	}
 
 	public void setText(MultiSceneActivity activity) {
-		Text cost = PixelMplus.getStrokeTextRegular10B(activity, String.valueOf(unitData.getCost()),
-				7, 3);
+		Text cost = PixelMplus.getStrokeTextRegular10B(activity,
+				String.valueOf(unitData.getCost()), 7, 3);
 		Text level = PixelMplus.getStrokeTextRegular10B(activity,
 				String.valueOf(unitData.getLevel()), 48, 64);
 		level.setPosition(this.getWidth() - level.getWidth() - 7,
@@ -170,8 +168,9 @@ public class CardSprite extends Sprite {
 
 	private void onReDragAndDropUnit(final TouchEvent pSceneTouchEvent) {
 		if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-			fx = this.getX();
-			fy = this.getY();
+			float[] position = convertSceneToLocalCoordinates(this.getX(), this.getY());
+			fx = position[0];
+			fy = position[1];
 			this.registerEntityModifier(flashModifier);
 			this.collisionListener.onCollisionAtFieldWithDown(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
