@@ -1,6 +1,5 @@
 package info.skullware.dotsummoner.scene.battle.sprite;
 
-import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.activity.MultiSceneActivity;
 import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
@@ -131,21 +130,19 @@ public class CardSprite extends Sprite {
 			fy = this.getY();
 			this.registerEntityModifier(flashModifier);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
-			this.collisionListener.onCollisionAtFieldWithMove(this);
+			this.collisionListener.onCollisionMove(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-			if (!this.collisionListener.onCollisionAtFieldWithUp(this)) {
+			if (!this.collisionListener.onCollisionUp(this)) {
 				// 移動キャンセル
 				this.registerEntityModifier(new MoveModifier(0.5f, pSceneTouchEvent.getX()
-						- this.getWidth() / 2, fx, pSceneTouchEvent.getY() - this.getHeight() / 2
-						- (MainActivity.HEIGHT - DeckArea.HEIGHT), fy));
+						- this.getParent().getX() - this.getWidth() / 2, fx, pSceneTouchEvent
+						.getY() - this.getParent().getY() - this.getHeight() / 2, fy));
 			}
 			this.setAlpha(1);
 			this.unregisterEntityModifier(flashModifier);
 			return;
 		}
 		// 移動
-//		this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY()
-//				- this.getHeight() / 2 - (MainActivity.HEIGHT - DeckArea.HEIGHT));
 		this.setPosition(pSceneTouchEvent.getX() - this.getParent().getX() - this.getWidth() / 2,
 				pSceneTouchEvent.getY() - this.getParent().getY() - this.getHeight() / 2);
 	}
@@ -159,9 +156,9 @@ public class CardSprite extends Sprite {
 			fy = this.getY();
 			this.registerEntityModifier(flashModifier);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
-			this.collisionListener.onCollisionAtDeckWithMove(this);
+			this.collisionListener.onCollisionMove(this);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-			if (!this.collisionListener.onCollisionAtDeckWithUp(this)) {
+			if (!this.collisionListener.onCollisionReUp(this)) {
 				// 移動キャンセル
 				this.registerEntityModifier(new MoveModifier(0.5f, pSceneTouchEvent.getX()
 						- this.getParent().getX() - this.getWidth() / 2, fx, pSceneTouchEvent

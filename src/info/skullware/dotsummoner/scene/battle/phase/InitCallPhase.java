@@ -100,7 +100,7 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 			FieldSprite field = dto.getEnemyFields().get(enemy.getPosition());
 
 			enemy.setPosition(field.getWidth() / 2 - enemy.getWidth() / 2,
-					40 - enemy.getHeight() * 1.5f);
+					40 - enemy.getHeight() * 1.2f);
 			enemy.setScale(1.5f);
 			enemy.setZIndex(field.getZIndex() + 1);
 			enemy.registerEntityModifier(new FadeInModifier(2f, new IEntityModifierListener() {
@@ -129,7 +129,7 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 	 * フィールド衝突判定（ユニット移動）
 	 */
 	@Override
-	public void onCollisionAtFieldWithMove(CardSprite card) {
+	public void onCollisionMove(CardSprite card) {
 		boolean isCollision = false;
 		// フィールドとの衝突判定
 		for (FieldSprite field : dto.getPlayerFields()) {
@@ -147,20 +147,15 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 	 * フィールド衝突判定（ユニットドロップ）
 	 */
 	@Override
-	public boolean onCollisionAtFieldWithUp(CardSprite card) {
+	public boolean onCollisionUp(CardSprite card) {
 		// フィールドとの衝突判定
 		for (FieldSprite field : dto.getPlayerFields()) {
 			if (card.collidesWith(field) && field.getUnitData() == null) {
-				// フィールドに貼り付け
+				// カードデタッチ
 				card.detachSelf();
-
-				field.attachChild(card);
+				// フィールドアタッチ
+				field.attachCard(card);
 				card.setState(States.FIELD_AREA);
-				card.setPosition(field.getWidth() / 2 - card.getWidth() / 2, 40 - card.getHeight());
-				card.setZIndex(field.getZIndex() + 1);
-				card.setRotation(10f);
-				field.setUnitData(card.getUnitData());
-				field.clear();
 
 				// デックエリア再設定
 				dto.getDeckArea().setDeckUnits(dto.getCards());
@@ -170,25 +165,31 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 		return false;
 	}
 
+	/**
+	 * 再衝突判定（ユニットドロップ）
+	 */
 	@Override
-	public boolean onCollisionAtDeckWithUp(CardSprite card) {
+	public boolean onCollisionReUp(CardSprite card) {
 		// デックエリアとの衝突判定
 		if (card.collidesWith(dto.getDeckArea())) {
-			// フィールドに貼り付け
-			FieldSprite field = (FieldSprite) card.getParent();
-			field.detachChild(card);
-			field.setUnitData(null);
+			// カードデタッチ
+			((FieldSprite) card.getParent()).detachCard(card);
+			card.setState(States.DECK_AREA);
 			// デックエリア再設定
 			dto.getDeckArea().setDeckUnits(dto.getCards());
 			return true;
 		}
+		// フィールドとの衝突判定
+		for (FieldSprite field : dto.getPlayerFields()) {
+			if (card.collidesWith(field) && field.getUnitData() == null) {
+				// カードデタッチ
+				((FieldSprite) card.getParent()).detachCard(card);
+				// フィールドアタッチ
+				field.attachCard(card);
+				return true;
+			}
+		}
 		return false;
-	}
-
-	@Override
-	public void onCollisionAtDeckWithMove(CardSprite unit) {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 
 }

@@ -18,12 +18,32 @@ public class FieldSprite extends Sprite {
 		this.isFlash = false;
 	}
 
+	/*
+	 * アタッチカード
+	 */
+	public void attachCard(CardSprite card) {
+		card.setPosition(this.getWidth() / 2 - card.getWidth() / 2, 40 - card.getHeight());
+		card.setZIndex(this.getZIndex() + 1);
+		card.setRotation(10f);
+		this.unitData = card.getUnitData();
+		this.clear();
+		this.attachChild(card);
+	}
+
 	public void clear() {
 		if (isFlash) {
 			this.unregisterEntityModifier(flashModifier);
 			this.isFlash = false;
 			this.setAlpha(0.8f);
 		}
+	}
+
+	/*
+	 * デタッチカード
+	 */
+	public void detachCard(CardSprite card) {
+		this.detachChild(card);
+		this.unitData = null;
 	}
 
 	public void flash() {
@@ -35,9 +55,5 @@ public class FieldSprite extends Sprite {
 
 	public Unit getUnitData() {
 		return unitData;
-	}
-
-	public void setUnitData(Unit unitData) {
-		this.unitData = unitData;
 	}
 }

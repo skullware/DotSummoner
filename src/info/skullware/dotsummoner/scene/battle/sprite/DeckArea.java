@@ -64,6 +64,9 @@ public class DeckArea extends Rectangle {
 		return true;
 	}
 
+	/*
+	 * デック設定
+	 */
 	public void setDeckUnits(List<CardSprite> sprites) {
 		this.detachChildren();
 		for (CardSprite unitSprite : sprites) {
