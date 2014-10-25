@@ -18,6 +18,7 @@ public class PixelMplus {
 	public static enum FontWeight {
 		REGULAR10, BOLD10, REGULAR12, BOLD12
 	}
+
 	/*
 	 * ストロークフォント
 	 */
@@ -38,17 +39,19 @@ public class PixelMplus {
 		return getStrokeText(activity, text, pX, pY, 28, FontWeight.REGULAR10, Color.WHITE,
 				Color.BLACK);
 	}
+
 	public static Text getStrokeTextBold10(MultiSceneActivity activity, String text, float pX,
 			float pY) {
 		return getStrokeText(activity, text, pX, pY, 28, FontWeight.BOLD10, Color.WHITE,
 				Color.BLACK);
 	}
+
 	public static Text getStrokeTextRegular12(MultiSceneActivity activity, String text, float pX,
 			float pY) {
 		return getStrokeText(activity, text, pX, pY, 28, FontWeight.REGULAR12, Color.BLACK,
 				Color.DKGRAY);
 	}
-	
+
 	/*
 	 * ノーマルフォント
 	 */
@@ -73,7 +76,7 @@ public class PixelMplus {
 	}
 
 	public static void setDefaultColor(Text text) {
-		text.setColor(95f, 79f, 66f);
+		text.setColor(95 / 255f, 79 / 255f, 66 / 255f);
 	}
 
 	private static String getFontWeight(FontWeight fontWeight) {

@@ -3,6 +3,7 @@ package info.skullware.dotsummoner.scene.battle.dto;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
+import info.skullware.dotsummoner.scene.battle.sprite.StatusArea;
 import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 import info.skullware.dotsummoner.scene.quest.Quest;
 
@@ -26,6 +27,9 @@ public class BattleSceneDto {
 	// デック
 	private DeckArea deckArea;
 
+	// ステータス
+	private StatusArea statusArea;
+	
 	// クエスト
 	private Quest quest;
 
@@ -39,6 +43,10 @@ public class BattleSceneDto {
 
 	public DeckArea getDeckArea() {
 		return deckArea;
+	}
+
+	public EffectDto getEffect() {
+		return effect;
 	}
 
 	public List<FieldSprite> getEnemyFields() {
@@ -57,6 +65,10 @@ public class BattleSceneDto {
 		return quest;
 	}
 
+	public StatusArea getStatusArea() {
+		return statusArea;
+	}
+
 	public void setBackground(Sprite background) {
 		this.background = background;
 	}
@@ -67,6 +79,10 @@ public class BattleSceneDto {
 
 	public void setDeckArea(DeckArea deckArea) {
 		this.deckArea = deckArea;
+	}
+
+	public void setEffect(EffectDto effect) {
+		this.effect = effect;
 	}
 
 	public void setEnemyFields(List<FieldSprite> enemyFields) {
@@ -85,11 +101,7 @@ public class BattleSceneDto {
 		this.quest = quest;
 	}
 
-	public EffectDto getEffect() {
-		return effect;
-	}
-
-	public void setEffect(EffectDto effect) {
-		this.effect = effect;
+	public void setStatusArea(StatusArea statusArea) {
+		this.statusArea = statusArea;
 	}
 }

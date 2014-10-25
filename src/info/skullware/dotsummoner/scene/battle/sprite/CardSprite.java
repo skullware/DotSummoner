@@ -5,6 +5,7 @@ import info.skullware.dotsummoner.common.util.Effects;
 import info.skullware.dotsummoner.common.util.PixelMplus;
 import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
+import info.skullware.dotsummoner.scene.battle.listener.StatusListener;
 
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -25,6 +26,8 @@ public class CardSprite extends Sprite {
 	 * 衝突検知リスナ
 	 */
 	private CollisionListener collisionListener;
+
+	private StatusListener statusListener;
 
 	private IEntityModifier flashModifier = Effects.getFlashModifier(2);
 	/**
@@ -90,6 +93,7 @@ public class CardSprite extends Sprite {
 	 * リスナーを削除する
 	 */
 	public void removeListener() {
+		this.statusListener = null;
 		this.collisionListener = null;
 	}
 
@@ -106,11 +110,15 @@ public class CardSprite extends Sprite {
 		this.state = state;
 	}
 
+	public void setStatusListener(StatusListener statusListener) {
+		this.statusListener = statusListener;
+	}
+
 	public void setText(MultiSceneActivity activity) {
-		Text cost = PixelMplus.getStrokeTextBold10(activity,
-				String.valueOf(unitData.getCost()), 7, 3);
-		Text level = PixelMplus.getStrokeTextBold10(activity,
-				String.valueOf(unitData.getLevel()), 48, 64);
+		Text cost = PixelMplus.getStrokeTextBold10(activity, String.valueOf(unitData.getCost()), 7,
+				3);
+		Text level = PixelMplus.getStrokeTextBold10(activity, String.valueOf(unitData.getLevel()),
+				48, 64);
 		level.setPosition(this.getWidth() - level.getWidth() - 7,
 				this.getHeight() - level.getHeight() - 3);
 		this.attachChild(cost);
@@ -128,6 +136,7 @@ public class CardSprite extends Sprite {
 		if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
 			fx = this.getX();
 			fy = this.getY();
+			this.statusListener.onVisibleStatus(unitData);
 			this.registerEntityModifier(flashModifier);
 		} else if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_MOVE) {
 			this.collisionListener.onCollisionMove(this);

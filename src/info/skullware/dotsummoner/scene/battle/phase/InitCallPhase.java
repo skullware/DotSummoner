@@ -2,9 +2,11 @@ package info.skullware.dotsummoner.scene.battle.phase;
 
 import info.skullware.dotsummoner.MainActivity;
 import info.skullware.dotsummoner.common.util.PixelMplus;
+import info.skullware.dotsummoner.param.unit.PlayerUnit;
 import info.skullware.dotsummoner.scene.battle.BattleScene;
 import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.listener.CollisionListener;
+import info.skullware.dotsummoner.scene.battle.listener.StatusListener;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite.States;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
@@ -21,7 +23,7 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.text.Text;
 import org.andengine.util.modifier.IModifier;
 
-public class InitCallPhase extends AbstractPhase implements CollisionListener {
+public class InitCallPhase extends AbstractPhase implements CollisionListener, StatusListener {
 
 	private BattleSceneDto dto;
 	private Music bgm;
@@ -31,6 +33,7 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 		this.dto = dto;
 		for (CardSprite card : dto.getCards()) {
 			card.setCollisionListener(this);
+			card.setStatusListener(this);
 		}
 	}
 
@@ -55,6 +58,9 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 		scene.attachChild(dto.getDeckArea());
 		scene.registerTouchArea(dto.getDeckArea());
 		dto.getDeckArea().setDeckUnits(dto.getCards());
+
+		// ステータスエリア設定
+		scene.attachChild(dto.getStatusArea());
 
 		// コスト表示
 		Text cost = PixelMplus.getStrokeTextRegular12(scene.getBaseActivity(), "COST 000/123", 0,
@@ -190,6 +196,16 @@ public class InitCallPhase extends AbstractPhase implements CollisionListener {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void onVisibleStatus(PlayerUnit unit) {
+		dto.getStatusArea().setUnitData(unit);
+	}
+
+	@Override
+	public void onHiddenStatus(PlayerUnit unit) {
+		dto.getStatusArea().hidden();		
 	}
 
 }

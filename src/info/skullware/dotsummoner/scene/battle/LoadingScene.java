@@ -14,6 +14,7 @@ import info.skullware.dotsummoner.scene.battle.dto.BattleSceneDto;
 import info.skullware.dotsummoner.scene.battle.sprite.CardSprite;
 import info.skullware.dotsummoner.scene.battle.sprite.DeckArea;
 import info.skullware.dotsummoner.scene.battle.sprite.FieldSprite;
+import info.skullware.dotsummoner.scene.battle.sprite.StatusArea;
 import info.skullware.dotsummoner.scene.battle.sprite.UnitSprite;
 import info.skullware.dotsummoner.scene.quest.Quest;
 
@@ -74,6 +75,8 @@ public class LoadingScene extends KeyListenScene {
 				}
 				// デックエリア
 				dto.setDeckArea(new DeckArea(getBaseActivity()));
+			    // ステータスエリア
+				dto.setStatusArea(StatusArea.createInstance(getBaseActivity()));
 				// フィールド（プレイヤー）
 				for (int i = 0; i < 3; i++) {
 					for (int n = 0; n < 3; n++) {
